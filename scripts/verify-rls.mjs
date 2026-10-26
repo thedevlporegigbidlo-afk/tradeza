@@ -45,7 +45,7 @@ async function main() {
   const categories = await get("categories?select=id")
   record(
     "categories are readable and seeded",
-    categories.status === 200 && Array.isArray(categories.body) && categories.body.length >= 5,
+    categories.status === 200 && Array.isArray(categories.body) && categories.body.length >= 13,
     `status=${categories.status} count=${Array.isArray(categories.body) ? categories.body.length : "n/a"}`
   )
 
@@ -114,6 +114,38 @@ async function main() {
     "anonymous visitors cannot insert businesses",
     insert.status === 401 || insert.status === 403,
     `status=${insert.status}`
+  )
+
+  const richFields = await get(
+    "businesses?select=id,business_type,whatsapp,gallery_urls&status=eq.published&limit=1"
+  )
+  record(
+    "published businesses expose listings fields",
+    richFields.status === 200 && Array.isArray(richFields.body),
+    `status=${richFields.status}`
+  )
+
+  const upload = await fetch(
+    `${url}/storage/v1/object/business-media/rls-probe/probe.png`,
+    {
+      method: "POST",
+      headers: {
+        ...headers,
+        "Content-Type": "image/png",
+        "x-upsert": "false",
+      },
+      body: Buffer.from(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9Z0ZkAAAAASUVORK5CYII=",
+        "base64"
+      ),
+    }
+  )
+  const uploadBody = await upload.json().catch(() => null)
+  record(
+    "anonymous visitors cannot upload business media",
+    [401, 403].includes(upload.status) ||
+      String(uploadBody?.statusCode) === "403",
+    `status=${upload.status}`
   )
 
   const settings = await fetch(`${url}/auth/v1/settings`, { headers })

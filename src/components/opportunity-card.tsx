@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Icon } from "@/components/icon"
 import { opportunityTypeLabel } from "@/lib/constants"
-import { locationLabel, relativeTime } from "@/lib/utils"
+import { locationLabel, formatDateOnly, relativeTime } from "@/lib/utils"
 import type { PublicOpportunity } from "@/lib/types/database"
 
 export function OpportunityCard({
@@ -39,6 +39,30 @@ export function OpportunityCard({
           />
           <span>{location}</span>
         </div>
+        {(opportunity.budget ||
+          opportunity.quantity ||
+          opportunity.deadline) && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {opportunity.budget && (
+              <span className="inline-flex items-center gap-1 bg-[#EDF3ED] text-[#236B50] font-label-sm text-label-sm font-semibold px-2.5 py-1 rounded-full">
+                <Icon name="sell" className="text-[14px]" />
+                {opportunity.budget}
+              </span>
+            )}
+            {opportunity.quantity && (
+              <span className="inline-flex items-center gap-1 bg-[#FAFAF7] text-[#3F4943] font-label-sm text-label-sm px-2.5 py-1 rounded-full border border-[#E4E9E3]">
+                <Icon name="inventory" className="text-[14px]" />
+                {opportunity.quantity}
+              </span>
+            )}
+            {opportunity.deadline && (
+              <span className="inline-flex items-center gap-1 bg-[#FAFAF7] text-[#3F4943] font-label-sm text-label-sm px-2.5 py-1 rounded-full border border-[#E4E9E3]">
+                <Icon name="event" className="text-[14px]" />
+                By {formatDateOnly(opportunity.deadline)}
+              </span>
+            )}
+          </div>
+        )}
         {opportunity.description && (
           <p className="font-body-sm text-body-sm text-[#66716A] leading-relaxed mb-6">
             {opportunity.description.length > 160

@@ -11,61 +11,91 @@ export type Database = {
     Tables: {
       businesses: {
         Row: {
+          business_type: string | null
           category_id: string | null
           city: string | null
+          contact_name: string | null
           country: string | null
           created_at: string
           description: string | null
+          designation: string | null
+          established_year: number | null
+          gallery_urls: string[]
           id: string
           logo_url: string | null
+          moq: string | null
           name: string
           owner_id: string
+          price_range: string | null
+          products: string | null
           public_email: string | null
           public_phone: string | null
+          service_areas: string | null
           short_description: string | null
           slug: string
           status: string
           updated_at: string
           verified: boolean
           website_url: string | null
+          whatsapp: string | null
         }
         Insert: {
+          business_type?: string | null
           category_id?: string | null
           city?: string | null
+          contact_name?: string | null
           country?: string | null
           created_at?: string
           description?: string | null
+          designation?: string | null
+          established_year?: number | null
+          gallery_urls?: string[]
           id?: string
           logo_url?: string | null
+          moq?: string | null
           name: string
           owner_id: string
+          price_range?: string | null
+          products?: string | null
           public_email?: string | null
           public_phone?: string | null
+          service_areas?: string | null
           short_description?: string | null
           slug: string
           status?: string
           updated_at?: string
           verified?: boolean
           website_url?: string | null
+          whatsapp?: string | null
         }
         Update: {
+          business_type?: string | null
           category_id?: string | null
           city?: string | null
+          contact_name?: string | null
           country?: string | null
           created_at?: string
           description?: string | null
+          designation?: string | null
+          established_year?: number | null
+          gallery_urls?: string[]
           id?: string
           logo_url?: string | null
+          moq?: string | null
           name?: string
           owner_id?: string
+          price_range?: string | null
+          products?: string | null
           public_email?: string | null
           public_phone?: string | null
+          service_areas?: string | null
           short_description?: string | null
           slug?: string
           status?: string
           updated_at?: string
           verified?: boolean
           website_url?: string | null
+          whatsapp?: string | null
         }
         Relationships: [
           {
@@ -106,52 +136,67 @@ export type Database = {
       }
       opportunities: {
         Row: {
+          budget: string | null
           business_id: string | null
           city: string | null
+          contact_name: string | null
           country: string | null
           created_at: string
+          deadline: string | null
           description: string | null
           id: string
           is_international: boolean
           owner_id: string
           public_email: string | null
           public_phone: string | null
+          quantity: string | null
           status: string
           title: string
           type: string
           updated_at: string
+          whatsapp: string | null
         }
         Insert: {
+          budget?: string | null
           business_id?: string | null
           city?: string | null
+          contact_name?: string | null
           country?: string | null
           created_at?: string
+          deadline?: string | null
           description?: string | null
           id?: string
           is_international?: boolean
           owner_id: string
           public_email?: string | null
           public_phone?: string | null
+          quantity?: string | null
           status?: string
           title: string
           type: string
           updated_at?: string
+          whatsapp?: string | null
         }
         Update: {
+          budget?: string | null
           business_id?: string | null
           city?: string | null
+          contact_name?: string | null
           country?: string | null
           created_at?: string
+          deadline?: string | null
           description?: string | null
           id?: string
           is_international?: boolean
           owner_id?: string
           public_email?: string | null
           public_phone?: string | null
+          quantity?: string | null
           status?: string
           title?: string
           type?: string
           updated_at?: string
+          whatsapp?: string | null
         }
         Relationships: [
           {

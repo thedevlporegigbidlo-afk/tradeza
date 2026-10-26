@@ -4,7 +4,9 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { opportunitySchema } from "@/lib/validation"
-import type { FormState } from "@/lib/validation"
+import type { FormState, ActionResult } from "@/lib/validation"
+
+const DUPLICATE_WINDOW_MS = 7 * 24 * 60 * 60 * 1000
 
 async function requireUserId(): Promise<string> {
   const supabase = await createClient()
@@ -22,11 +24,51 @@ function parseOpportunityForm(formData: FormData) {
     description: formData.get("description"),
     country: formData.get("country") || undefined,
     city: formData.get("city") || undefined,
+    quantity: formData.get("quantity") || undefined,
+    budget: formData.get("budget") || undefined,
+    deadline: formData.get("deadline") || undefined,
     is_international: formData.get("is_international") === "on",
     public_email: formData.get("public_email") || undefined,
     public_phone: formData.get("public_phone") || undefined,
+    whatsapp: formData.get("whatsapp") || undefined,
+    contact_name: formData.get("contact_name") || undefined,
     business_id: formData.get("business_id") || undefined,
   })
+}
+
+function opportunityPayload(data: ReturnType<typeof parseOpportunityForm>) {
+  if (!data.success) return null
+  const v = data.data
+  return {
+    title: v.title,
+    type: v.type,
+    description: v.description,
+    country: v.country ?? null,
+    city: v.city ?? null,
+    quantity: v.quantity ?? null,
+    budget: v.budget ?? null,
+    deadline: v.deadline ?? null,
+    is_international: v.is_international,
+    public_email: v.public_email ?? null,
+    public_phone: v.public_phone ?? null,
+    whatsapp: v.whatsapp ?? null,
+    contact_name: v.contact_name ?? null,
+  }
+}
+
+async function resolveOwnedBusinessId(
+  userId: string,
+  businessId: string | undefined
+): Promise<string | null> {
+  if (!businessId) return null
+  const supabase = await createClient()
+  const { data: business } = await supabase
+    .from("businesses")
+    .select("id")
+    .eq("id", businessId)
+    .eq("owner_id", userId)
+    .maybeSingle()
+  return business?.id ?? null
 }
 
 export async function createOpportunity(
@@ -43,31 +85,36 @@ export async function createOpportunity(
     }
   }
 
+  const payload = opportunityPayload(parsed)
+  if (!payload) return { error: "Please check the form and try again." }
+
   const supabase = await createClient()
 
-  let businessId: string | null = null
-  if (parsed.data.business_id) {
-    const { data: business } = await supabase
-      .from("businesses")
-      .select("id")
-      .eq("id", parsed.data.business_id)
-      .eq("owner_id", userId)
-      .maybeSingle()
-    businessId = business?.id ?? null
+  const { data: duplicate } = await supabase
+    .from("opportunities")
+    .select("id")
+    .eq("owner_id", userId)
+    .eq("title", payload.title)
+    .gte("created_at", new Date(Date.now() - DUPLICATE_WINDOW_MS).toISOString())
+    .maybeSingle()
+
+  if (duplicate) {
+    return {
+      error:
+        "You already posted an opportunity with this title in the last 7 days. Edit that post instead.",
+    }
   }
+
+  const businessId = await resolveOwnedBusinessId(
+    userId,
+    parsed.data.business_id
+  )
 
   const { error } = await supabase.from("opportunities").insert({
     owner_id: userId,
     business_id: businessId,
-    title: parsed.data.title,
-    type: parsed.data.type,
-    description: parsed.data.description,
-    country: parsed.data.country ?? null,
-    city: parsed.data.city ?? null,
-    is_international: parsed.data.is_international,
-    public_email: parsed.data.public_email ?? null,
-    public_phone: parsed.data.public_phone ?? null,
     status: "draft",
+    ...payload,
   })
 
   if (error) {
@@ -93,32 +140,18 @@ export async function updateOpportunity(
     }
   }
 
-  const supabase = await createClient()
+  const payload = opportunityPayload(parsed)
+  if (!payload) return { error: "Please check the form and try again." }
 
-  let businessId: string | null = null
-  if (parsed.data.business_id) {
-    const { data: business } = await supabase
-      .from("businesses")
-      .select("id")
-      .eq("id", parsed.data.business_id)
-      .eq("owner_id", userId)
-      .maybeSingle()
-    businessId = business?.id ?? null
-  }
+  const supabase = await createClient()
+  const businessId = await resolveOwnedBusinessId(
+    userId,
+    parsed.data.business_id
+  )
 
   const { error } = await supabase
     .from("opportunities")
-    .update({
-      title: parsed.data.title,
-      type: parsed.data.type,
-      description: parsed.data.description,
-      country: parsed.data.country ?? null,
-      city: parsed.data.city ?? null,
-      is_international: parsed.data.is_international,
-      public_email: parsed.data.public_email ?? null,
-      public_phone: parsed.data.public_phone ?? null,
-      business_id: businessId,
-    })
+    .update({ ...payload, business_id: businessId })
     .eq("id", opportunityId)
     .eq("owner_id", userId)
 
@@ -129,8 +162,6 @@ export async function updateOpportunity(
   revalidatePath("/", "layout")
   redirect("/my-business?updated=1")
 }
-
-import type { ActionResult } from "@/lib/validation"
 
 export async function setOpportunityStatus(
   opportunityId: string,

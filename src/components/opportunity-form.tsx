@@ -81,23 +81,6 @@ export function OpportunityForm({
         </select>
       </div>
 
-      <div>
-        <label htmlFor="description" className={labelClass}>
-          Description
-        </label>
-        <textarea
-          id="description"
-          name="description"
-          required
-          minLength={20}
-          maxLength={5000}
-          rows={6}
-          defaultValue={opportunity?.description ?? ""}
-          placeholder="Describe what you need or offer, quantities, timelines, and any requirements."
-          className={inputClass}
-        />
-      </div>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
           <label htmlFor="country" className={labelClass}>
@@ -109,7 +92,7 @@ export function OpportunityForm({
             type="text"
             maxLength={100}
             defaultValue={opportunity?.country ?? ""}
-            placeholder="e.g. Netherlands"
+            placeholder="e.g. India"
             className={inputClass}
           />
         </div>
@@ -123,10 +106,73 @@ export function OpportunityForm({
             type="text"
             maxLength={100}
             defaultValue={opportunity?.city ?? ""}
-            placeholder="e.g. Rotterdam"
+            placeholder="e.g. Jaipur"
             className={inputClass}
           />
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div>
+          <label htmlFor="quantity" className={labelClass}>
+            Quantity{" "}
+            <span className="text-outline font-body-sm">(optional)</span>
+          </label>
+          <input
+            id="quantity"
+            name="quantity"
+            type="text"
+            maxLength={160}
+            defaultValue={opportunity?.quantity ?? ""}
+            placeholder="e.g. 5,000 pieces / month"
+            className={inputClass}
+          />
+        </div>
+        <div>
+          <label htmlFor="budget" className={labelClass}>
+            Budget / rate{" "}
+            <span className="text-outline font-body-sm">(optional)</span>
+          </label>
+          <input
+            id="budget"
+            name="budget"
+            type="text"
+            maxLength={160}
+            defaultValue={opportunity?.budget ?? ""}
+            placeholder="e.g. ₹40–₹60 per unit"
+            className={inputClass}
+          />
+        </div>
+        <div>
+          <label htmlFor="deadline" className={labelClass}>
+            Needed by{" "}
+            <span className="text-outline font-body-sm">(optional)</span>
+          </label>
+          <input
+            id="deadline"
+            name="deadline"
+            type="date"
+            defaultValue={opportunity?.deadline ?? ""}
+            className={inputClass}
+          />
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="description" className={labelClass}>
+          Description
+        </label>
+        <textarea
+          id="description"
+          name="description"
+          required
+          minLength={20}
+          maxLength={5000}
+          rows={6}
+          defaultValue={opportunity?.description ?? ""}
+          placeholder="Describe what you need or offer, specifications, quantities, timelines, and any requirements."
+          className={inputClass}
+        />
       </div>
 
       <label className="flex items-start gap-3 cursor-pointer">
@@ -168,24 +214,51 @@ export function OpportunityForm({
         </select>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="border-t border-[#E4E9E3] pt-6 mt-2">
+        <h2 className="font-headline-sm text-headline-sm text-[#202923] font-bold">
+          Contact
+        </h2>
+        <p className="font-body-sm text-body-sm text-[#66716A] mt-1 mb-4">
+          Give people a way to respond directly — WhatsApp works best for most
+          members.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div>
-          <label htmlFor="public_email" className={labelClass}>
-            Public email <span className="text-outline font-body-sm">(optional)</span>
+          <label htmlFor="contact_name" className={labelClass}>
+            Contact person{" "}
+            <span className="text-outline font-body-sm">(optional)</span>
           </label>
           <input
-            id="public_email"
-            name="public_email"
-            type="email"
-            maxLength={320}
-            defaultValue={opportunity?.public_email ?? ""}
-            placeholder="deals@example.com"
+            id="contact_name"
+            name="contact_name"
+            type="text"
+            maxLength={80}
+            defaultValue={opportunity?.contact_name ?? ""}
+            placeholder="e.g. Imran Shaikh"
+            className={inputClass}
+          />
+        </div>
+        <div>
+          <label htmlFor="whatsapp" className={labelClass}>
+            WhatsApp{" "}
+            <span className="text-outline font-body-sm">(recommended)</span>
+          </label>
+          <input
+            id="whatsapp"
+            name="whatsapp"
+            type="tel"
+            maxLength={40}
+            defaultValue={opportunity?.whatsapp ?? ""}
+            placeholder="+91 98765 43210"
             className={inputClass}
           />
         </div>
         <div>
           <label htmlFor="public_phone" className={labelClass}>
-            Public phone <span className="text-outline font-body-sm">(optional)</span>
+            Phone{" "}
+            <span className="text-outline font-body-sm">(optional)</span>
           </label>
           <input
             id="public_phone"
@@ -193,13 +266,29 @@ export function OpportunityForm({
             type="tel"
             maxLength={40}
             defaultValue={opportunity?.public_phone ?? ""}
-            placeholder="+1 555 000 0000"
+            placeholder="+91 98765 43210"
             className={inputClass}
           />
         </div>
       </div>
 
-      <div className="pt-2 flex items-center gap-4">
+      <div>
+        <label htmlFor="public_email" className={labelClass}>
+          Public email{" "}
+          <span className="text-outline font-body-sm">(optional)</span>
+        </label>
+        <input
+          id="public_email"
+          name="public_email"
+          type="email"
+          maxLength={320}
+          defaultValue={opportunity?.public_email ?? ""}
+          placeholder="deals@example.com"
+          className={inputClass}
+        />
+      </div>
+
+      <div className="pt-2 flex flex-col sm:flex-row sm:items-center gap-4">
         <SubmitButton>
           {isEdit ? "Save changes" : "Create opportunity"}
         </SubmitButton>

@@ -110,7 +110,7 @@ export default async function Home() {
             </div>
             <span className="hidden md:inline-flex items-center text-outline font-label-md text-label-md gap-1">
               <Icon name="category" className="text-[18px]" />
-              5 Core Classifications
+              {categories.length} Categories
             </span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">

@@ -9,8 +9,13 @@ import {
   getPublishedBusinesses,
   getCategories,
   getBusinessCountries,
+  getBusinessCities,
 } from "@/lib/queries"
-import { BUSINESS_PAGE_SIZE } from "@/lib/constants"
+import {
+  BUSINESS_PAGE_SIZE,
+  BUSINESS_TYPES,
+  BUSINESS_TYPE_LABELS,
+} from "@/lib/constants"
 
 export const metadata: Metadata = {
   title: "Explore Businesses — Tradeza",
@@ -24,6 +29,9 @@ type SearchParams = {
   q?: string
   category?: string
   country?: string
+  city?: string
+  type?: string
+  verified?: string
   page?: string
 }
 
@@ -31,19 +39,26 @@ async function BusinessResults({
   q,
   category,
   country,
+  city,
+  type,
+  verified,
   page,
 }: Required<Pick<SearchParams, "page">> & SearchParams) {
   const pageNum = Number(page) || 1
-  const [{ businesses, total, pageCount }, categories, countries] =
+  const [{ businesses, total, pageCount }, categories, countries, cities] =
     await Promise.all([
       getPublishedBusinesses({
         q,
         category,
         country,
+        city,
+        type,
+        verified: verified === "1",
         page: pageNum,
       }),
       getCategories(),
       getBusinessCountries(),
+      getBusinessCities(),
     ])
 
   const selectedCategory = categories.find((c) => c.id === category)
@@ -51,6 +66,9 @@ async function BusinessResults({
     q,
     category,
     country,
+    city,
+    type,
+    verified,
   }
 
   return (
@@ -61,8 +79,8 @@ async function BusinessResults({
         action="/businesses"
         className="mb-10 bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl p-5 custom-card-shadow"
       >
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-          <div className="md:col-span-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+          <div className="lg:col-span-2">
             <label
               htmlFor="q"
               className="block font-label-lg text-label-lg text-[#202923] mb-1.5"
@@ -76,7 +94,7 @@ async function BusinessResults({
                 name="q"
                 type="search"
                 defaultValue={q ?? ""}
-                placeholder="Name, product, city…"
+                placeholder="Name, product, price, city…"
                 className="w-full bg-transparent border-0 p-0 text-on-surface font-body-md text-body-md placeholder:text-outline focus:ring-0 focus:outline-none"
               />
             </div>
@@ -104,6 +122,28 @@ async function BusinessResults({
           </div>
           <div>
             <label
+              htmlFor="city"
+              className="block font-label-lg text-label-lg text-[#202923] mb-1.5"
+            >
+              City
+            </label>
+            <input
+              id="city"
+              name="city"
+              type="text"
+              list="city-list"
+              defaultValue={city ?? ""}
+              placeholder="Any city"
+              className="w-full bg-surface-container-lowest border border-[#E4E9E3] rounded-xl px-3 py-2.5 font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-4 focus:ring-primary-container/10 transition-all"
+            />
+            <datalist id="city-list">
+              {cities.map((c) => (
+                <option key={c} value={c} />
+              ))}
+            </datalist>
+          </div>
+          <div>
+            <label
               htmlFor="country"
               className="block font-label-lg text-label-lg text-[#202923] mb-1.5"
             >
@@ -124,6 +164,39 @@ async function BusinessResults({
               ))}
             </datalist>
           </div>
+          <div>
+            <label
+              htmlFor="type"
+              className="block font-label-lg text-label-lg text-[#202923] mb-1.5"
+            >
+              Business type
+            </label>
+            <select
+              id="type"
+              name="type"
+              defaultValue={type ?? ""}
+              className="w-full bg-surface-container-lowest border border-[#E4E9E3] rounded-xl px-3 py-2.5 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-4 focus:ring-primary-container/10 transition-all"
+            >
+              <option value="">All types</option>
+              {BUSINESS_TYPES.map((t) => (
+                <option key={t} value={t}>
+                  {BUSINESS_TYPE_LABELS[t]}
+                </option>
+              ))}
+            </select>
+          </div>
+          <label className="flex items-center gap-2.5 bg-surface-container-lowest border border-[#E4E9E3] rounded-xl px-3 py-2.5 h-[46px] cursor-pointer">
+            <input
+              type="checkbox"
+              name="verified"
+              value="1"
+              defaultChecked={verified === "1"}
+              className="h-4 w-4 rounded border-[#E4E9E3] text-primary-container focus:ring-primary-container/30"
+            />
+            <span className="font-body-md text-body-md text-[#202923]">
+              Verified only
+            </span>
+          </label>
         </div>
         <div className="mt-4 flex items-center gap-3">
           <button
@@ -214,6 +287,9 @@ export default async function BusinessesPage({
             q={params.q}
             category={params.category}
             country={params.country}
+            city={params.city}
+            type={params.type}
+            verified={params.verified}
             page={params.page ?? "1"}
           />
         </Suspense>

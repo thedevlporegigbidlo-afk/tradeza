@@ -8,6 +8,7 @@ import { Pagination } from "@/components/pagination"
 import {
   getPublishedOpportunities,
   getOpportunityCountries,
+  getOpportunityCities,
 } from "@/lib/queries"
 import {
   OPPORTUNITY_TYPES,
@@ -27,6 +28,7 @@ type SearchParams = {
   q?: string
   type?: string
   country?: string
+  city?: string
   page?: string
 }
 
@@ -34,18 +36,22 @@ async function OpportunityResults({
   q,
   type,
   country,
+  city,
   page,
 }: SearchParams & { page: string }) {
   const pageNum = Number(page) || 1
-  const [{ opportunities, total, pageCount }, countries] = await Promise.all([
-    getPublishedOpportunities({ q, type, country, page: pageNum }),
-    getOpportunityCountries(),
-  ])
+  const [{ opportunities, total, pageCount }, countries, cities] =
+    await Promise.all([
+      getPublishedOpportunities({ q, type, country, city, page: pageNum }),
+      getOpportunityCountries(),
+      getOpportunityCities(),
+    ])
 
   const currentFilters: Record<string, string | undefined> = {
     q,
     type,
     country,
+    city,
   }
 
   return (
@@ -55,8 +61,8 @@ async function OpportunityResults({
         action="/opportunities"
         className="mb-10 bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl p-5 custom-card-shadow"
       >
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-          <div className="md:col-span-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+          <div className="lg:col-span-2">
             <label
               htmlFor="q"
               className="block font-label-lg text-label-lg text-[#202923] mb-1.5"
@@ -70,7 +76,7 @@ async function OpportunityResults({
                 name="q"
                 type="search"
                 defaultValue={q ?? ""}
-                placeholder="Title, description, location…"
+                placeholder="Title, product, budget, location…"
                 className="w-full bg-transparent border-0 p-0 text-on-surface font-body-md text-body-md placeholder:text-outline focus:ring-0 focus:outline-none"
               />
             </div>
@@ -95,6 +101,28 @@ async function OpportunityResults({
                 </option>
               ))}
             </select>
+          </div>
+          <div>
+            <label
+              htmlFor="city"
+              className="block font-label-lg text-label-lg text-[#202923] mb-1.5"
+            >
+              City
+            </label>
+            <input
+              id="city"
+              name="city"
+              type="text"
+              list="opp-city-list"
+              defaultValue={city ?? ""}
+              placeholder="Any city"
+              className="w-full bg-surface-container-lowest border border-[#E4E9E3] rounded-xl px-3 py-2.5 font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-4 focus:ring-primary-container/10 transition-all"
+            />
+            <datalist id="opp-city-list">
+              {cities.map((c) => (
+                <option key={c} value={c} />
+              ))}
+            </datalist>
           </div>
           <div>
             <label
@@ -212,6 +240,7 @@ export default async function OpportunitiesPage({
             q={params.q}
             type={params.type}
             country={params.country}
+            city={params.city}
             page={params.page ?? "1"}
           />
         </Suspense>

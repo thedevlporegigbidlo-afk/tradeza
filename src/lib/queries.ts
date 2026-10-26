@@ -19,10 +19,10 @@ import type {
 // Public projections deliberately exclude `owner_id` and any future private
 // columns. Keep these lists in sync with the types in `lib/types/database.ts`.
 const PUBLIC_BUSINESS_SELECT =
-  "id, name, slug, short_description, description, category_id, city, country, website_url, public_email, public_phone, logo_url, verified, status, created_at, updated_at, categories(id, name, slug, icon)"
+  "id, name, slug, business_type, short_description, description, category_id, city, country, service_areas, established_year, products, price_range, moq, logo_url, gallery_urls, website_url, public_email, public_phone, whatsapp, contact_name, designation, verified, status, created_at, updated_at, categories(id, name, slug, icon)"
 
 const PUBLIC_OPPORTUNITY_SELECT =
-  "id, business_id, title, type, description, is_international, country, city, public_email, public_phone, status, created_at, updated_at, businesses(id, name, slug)"
+  "id, business_id, title, type, description, is_international, country, city, quantity, budget, deadline, public_email, public_phone, whatsapp, contact_name, status, created_at, updated_at, businesses(id, name, slug)"
 
 export async function getCategories(): Promise<Category[]> {
   const supabase = createPublicClient()
@@ -56,6 +56,9 @@ export type BusinessFilters = {
   q?: string
   category?: string
   country?: string
+  city?: string
+  type?: string
+  verified?: boolean
   page?: number
 }
 
@@ -74,7 +77,7 @@ export async function getPublishedBusinesses(filters: BusinessFilters) {
     const term = escapeLike(filters.q)
     if (term) {
       query = query.or(
-        `name.ilike.%${term}%,short_description.ilike.%${term}%,description.ilike.%${term}%,city.ilike.%${term}%,country.ilike.%${term}%`
+        `name.ilike.%${term}%,short_description.ilike.%${term}%,description.ilike.%${term}%,products.ilike.%${term}%,price_range.ilike.%${term}%,moq.ilike.%${term}%,service_areas.ilike.%${term}%,city.ilike.%${term}%,country.ilike.%${term}%`
       )
     }
   }
@@ -84,6 +87,16 @@ export async function getPublishedBusinesses(filters: BusinessFilters) {
   if (filters.country) {
     const country = escapeLike(filters.country)
     if (country) query = query.ilike("country", `%${country}%`)
+  }
+  if (filters.city) {
+    const city = escapeLike(filters.city)
+    if (city) query = query.ilike("city", `%${city}%`)
+  }
+  if (filters.type) {
+    query = query.eq("business_type", filters.type)
+  }
+  if (filters.verified) {
+    query = query.eq("verified", true)
   }
 
   const { data, count, error } = await query.order("name").range(from, to)
@@ -115,6 +128,7 @@ export type OpportunityFilters = {
   q?: string
   type?: string
   country?: string
+  city?: string
   page?: number
 }
 
@@ -133,7 +147,7 @@ export async function getPublishedOpportunities(filters: OpportunityFilters) {
     const term = escapeLike(filters.q)
     if (term) {
       query = query.or(
-        `title.ilike.%${term}%,description.ilike.%${term}%,country.ilike.%${term}%,city.ilike.%${term}%`
+        `title.ilike.%${term}%,description.ilike.%${term}%,quantity.ilike.%${term}%,budget.ilike.%${term}%,country.ilike.%${term}%,city.ilike.%${term}%`
       )
     }
   }
@@ -143,6 +157,10 @@ export async function getPublishedOpportunities(filters: OpportunityFilters) {
   if (filters.country) {
     const country = escapeLike(filters.country)
     if (country) query = query.ilike("country", `%${country}%`)
+  }
+  if (filters.city) {
+    const city = escapeLike(filters.city)
+    if (city) query = query.ilike("city", `%${city}%`)
   }
 
   const { data, count, error } = await query
@@ -239,6 +257,36 @@ export async function getOpportunityCountries(): Promise<string[]> {
   const set = new Set(
     (data ?? [])
       .map((r) => r.country?.trim())
+      .filter((c): c is string => Boolean(c))
+  )
+  return [...set].sort((a, b) => a.localeCompare(b))
+}
+
+export async function getBusinessCities(): Promise<string[]> {
+  const supabase = createPublicClient()
+  const { data } = await supabase
+    .from("businesses")
+    .select("city")
+    .eq("status", "published")
+    .not("city", "is", null)
+  const set = new Set(
+    (data ?? [])
+      .map((r) => r.city?.trim())
+      .filter((c): c is string => Boolean(c))
+  )
+  return [...set].sort((a, b) => a.localeCompare(b))
+}
+
+export async function getOpportunityCities(): Promise<string[]> {
+  const supabase = createPublicClient()
+  const { data } = await supabase
+    .from("opportunities")
+    .select("city")
+    .eq("status", "published")
+    .not("city", "is", null)
+  const set = new Set(
+    (data ?? [])
+      .map((r) => r.city?.trim())
       .filter((c): c is string => Boolean(c))
   )
   return [...set].sort((a, b) => a.localeCompare(b))

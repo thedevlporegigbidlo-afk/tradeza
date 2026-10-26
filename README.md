@@ -38,6 +38,8 @@ Migrations live in `supabase/migrations/` and are the source of truth:
 | `20261018000000_tradeza_core_schema.sql` | profiles, categories, businesses, opportunities, RLS, triggers, indexes, seed categories |
 | `20261020210000_profiles_public_security_invoker.sql` | public profile projection as a security-invoker view |
 | `20261026120000_security_hardening.sql` | blocks self-assigned `verified` badges, per-column trigram search indexes |
+| `20261026130000_advisor_hardening.sql` | advisor-driven policy and search-path fixes |
+| `20261027120000_richer_listings.sql` | richer listing fields, 18 categories, `business-media` storage bucket + policies |
 
 Apply them with the Supabase MCP server (`apply_migration`) or the Supabase CLI:
 
@@ -55,6 +57,7 @@ RLS is enabled on every table exposed through the API:
 - Insert/update/delete require `auth.uid() = owner_id` — `owner_id` from the browser is never trusted.
 - `profiles` rows are private; the `profiles_public` view exposes only `id`, `full_name`, `avatar_url`.
 - The `verified` flag can only be changed by the service role / staff.
+- Storage: logos and photos go to the public `business-media` bucket. Uploads/deletes are restricted to the owner's folder (`<auth.uid()>/…`), max 5 MB, JPG/PNG/WebP/AVIF only.
 
 Verify the live project with the anon key:
 
@@ -104,4 +107,6 @@ scripts/            verification tooling
 
 - Listings are created as drafts; publishing is an explicit owner action.
 - Draft businesses are visible to their owner only, via `/my-business/[id]/preview`.
-- Business logos are displayed when a `logo_url` exists; there is no upload UI, so no storage bucket is configured.
+- Business listings carry a WhatsApp number, contact person, products, price range, MOQ, service areas, year established, a logo, and up to 8 gallery photos. Photos are uploaded straight from the browser to Supabase Storage, so no server action body limits apply.
+- Public listing pages only ever select public columns; `owner_id` is never exposed to visitors.
+- No payments or subscriptions are wired up yet.

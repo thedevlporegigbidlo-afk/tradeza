@@ -130,6 +130,15 @@ export default async function MyBusinessPage({
                       <p className="font-label-sm text-label-sm text-outline mt-1">
                         Created {relativeTime(business.created_at)}
                       </p>
+                      {(!business.whatsapp ||
+                        !business.logo_url ||
+                        !business.products ||
+                        business.gallery_urls.length === 0) && (
+                        <p className="font-label-sm text-label-sm text-primary mt-1">
+                          Add WhatsApp, products and photos so buyers can find
+                          and contact you.
+                        </p>
+                      )}
                     </div>
                     <div className="shrink-0">
                       <BusinessRowActions

@@ -7,6 +7,7 @@ describe("businessSchema", () => {
   const valid = {
     name: "Northstar Solar Supply",
     category_id: categoryId,
+    business_type: "manufacturer",
     short_description: "Solar panels and mounting hardware for distributors.",
     description: "We manufacture and export solar mounting systems worldwide.",
     website_url: "https://example.com",
@@ -56,6 +57,54 @@ describe("businessSchema", () => {
       expect(result.data.public_email).toBeUndefined()
     }
   })
+
+  it("accepts the richer listing fields", () => {
+    const result = businessSchema.safeParse({
+      ...valid,
+      business_type: "wholesaler",
+      whatsapp: "+91 98765 43210",
+      contact_name: "Imran Shaikh",
+      designation: "Owner",
+      products: "Basmati rice\nSpices",
+      price_range: "₹650–₹1,200 per piece",
+      moq: "50 pieces",
+      service_areas: "Jaipur, Delhi NCR",
+      established_year: "2016",
+      logo_url: "https://example.com/logo.png",
+      gallery_urls: ["https://example.com/one.png"],
+    })
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.established_year).toBe(2016)
+      expect(result.data.gallery_urls).toEqual([
+        "https://example.com/one.png",
+      ])
+    }
+  })
+
+  it("rejects a business type outside the list", () => {
+    const result = businessSchema.safeParse({
+      ...valid,
+      business_type: "franchise",
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it("rejects a WhatsApp number that is too short", () => {
+    const result = businessSchema.safeParse({ ...valid, whatsapp: "12345" })
+    expect(result.success).toBe(false)
+  })
+
+  it("drops non-http image URLs from the gallery", () => {
+    const result = businessSchema.safeParse({
+      ...valid,
+      gallery_urls: ["javascript:alert(1)", "https://example.com/ok.png"],
+    })
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.gallery_urls).toEqual(["https://example.com/ok.png"])
+    }
+  })
 })
 
 describe("opportunitySchema", () => {
@@ -72,6 +121,30 @@ describe("opportunitySchema", () => {
   it("accepts a valid opportunity", () => {
     const result = opportunitySchema.safeParse(valid)
     expect(result.success).toBe(true)
+  })
+
+  it("accepts the richer opportunity fields", () => {
+    const result = opportunitySchema.safeParse({
+      ...valid,
+      type: "job",
+      quantity: "5,000 pieces / month",
+      budget: "₹40–₹60 per unit",
+      deadline: "2026-12-31",
+      whatsapp: "+91 98765 43210",
+      contact_name: "Imran Shaikh",
+    })
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.deadline).toBe("2026-12-31")
+    }
+  })
+
+  it("rejects an invalid deadline", () => {
+    const result = opportunitySchema.safeParse({
+      ...valid,
+      deadline: "31-12-2026",
+    })
+    expect(result.success).toBe(false)
   })
 
   it("rejects an unsupported type", () => {

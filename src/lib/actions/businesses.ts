@@ -4,8 +4,10 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { businessSchema } from "@/lib/validation"
-import { slugify } from "@/lib/utils"
+import { escapeLike, slugify } from "@/lib/utils"
 import type { FormState, ActionResult } from "@/lib/validation"
+
+const MAX_BUSINESSES_PER_USER = 3
 
 async function requireUserId(): Promise<string> {
   const supabase = await createClient()
@@ -36,14 +38,54 @@ function parseBusinessForm(formData: FormData) {
   return businessSchema.safeParse({
     name: formData.get("name"),
     category_id: formData.get("category_id"),
+    business_type: formData.get("business_type") || undefined,
     country: formData.get("country") || undefined,
     city: formData.get("city") || undefined,
+    service_areas: formData.get("service_areas") || undefined,
+    established_year: formData.get("established_year") || undefined,
     short_description: formData.get("short_description"),
     description: formData.get("description"),
+    products: formData.get("products") || undefined,
+    price_range: formData.get("price_range") || undefined,
+    moq: formData.get("moq") || undefined,
+    logo_url: formData.get("logo_url") || undefined,
+    gallery_urls: formData
+      .getAll("gallery_urls")
+      .filter((v): v is string => typeof v === "string" && v.length > 0),
     website_url: formData.get("website_url") || undefined,
     public_email: formData.get("public_email") || undefined,
     public_phone: formData.get("public_phone") || undefined,
+    whatsapp: formData.get("whatsapp") || undefined,
+    contact_name: formData.get("contact_name") || undefined,
+    designation: formData.get("designation") || undefined,
   })
+}
+
+function listingPayload(data: ReturnType<typeof parseBusinessForm>) {
+  if (!data.success) return null
+  const v = data.data
+  return {
+    name: v.name,
+    category_id: v.category_id,
+    business_type: v.business_type ?? null,
+    country: v.country ?? null,
+    city: v.city ?? null,
+    service_areas: v.service_areas ?? null,
+    established_year: v.established_year ?? null,
+    short_description: v.short_description,
+    description: v.description,
+    products: v.products ?? null,
+    price_range: v.price_range ?? null,
+    moq: v.moq ?? null,
+    logo_url: v.logo_url ?? null,
+    gallery_urls: v.gallery_urls ?? [],
+    website_url: v.website_url ?? null,
+    public_email: v.public_email ?? null,
+    public_phone: v.public_phone ?? null,
+    whatsapp: v.whatsapp ?? null,
+    contact_name: v.contact_name ?? null,
+    designation: v.designation ?? null,
+  }
 }
 
 export async function createBusiness(
@@ -60,22 +102,44 @@ export async function createBusiness(
     }
   }
 
+  const payload = listingPayload(parsed)
+  if (!payload) {
+    return { error: "Please check the form and try again." }
+  }
+
   const supabase = await createClient()
-  const slug = await uniqueSlug(parsed.data.name)
+
+  const [{ count }, { data: duplicate }] = await Promise.all([
+    supabase
+      .from("businesses")
+      .select("id", { count: "exact", head: true })
+      .eq("owner_id", userId),
+    supabase
+      .from("businesses")
+      .select("id")
+      .eq("owner_id", userId)
+      .ilike("name", escapeLike(payload.name))
+      .maybeSingle(),
+  ])
+
+  if ((count ?? 0) >= MAX_BUSINESSES_PER_USER) {
+    return {
+      error:
+        "You already have the maximum number of business profiles. Edit an existing one instead.",
+    }
+  }
+
+  if (duplicate) {
+    return { error: "You already have a listing with this business name." }
+  }
+
+  const slug = await uniqueSlug(payload.name)
 
   const { error } = await supabase.from("businesses").insert({
     owner_id: userId,
-    name: parsed.data.name,
     slug,
-    category_id: parsed.data.category_id,
-    country: parsed.data.country ?? null,
-    city: parsed.data.city ?? null,
-    short_description: parsed.data.short_description,
-    description: parsed.data.description,
-    website_url: parsed.data.website_url ?? null,
-    public_email: parsed.data.public_email ?? null,
-    public_phone: parsed.data.public_phone ?? null,
     status: "draft",
+    ...payload,
   })
 
   if (error) {
@@ -104,20 +168,15 @@ export async function updateBusiness(
     }
   }
 
+  const payload = listingPayload(parsed)
+  if (!payload) {
+    return { error: "Please check the form and try again." }
+  }
+
   const supabase = await createClient()
   const { error } = await supabase
     .from("businesses")
-    .update({
-      name: parsed.data.name,
-      category_id: parsed.data.category_id,
-      country: parsed.data.country ?? null,
-      city: parsed.data.city ?? null,
-      short_description: parsed.data.short_description,
-      description: parsed.data.description,
-      website_url: parsed.data.website_url ?? null,
-      public_email: parsed.data.public_email ?? null,
-      public_phone: parsed.data.public_phone ?? null,
-    })
+    .update(payload)
     .eq("id", businessId)
     .eq("owner_id", userId)
 

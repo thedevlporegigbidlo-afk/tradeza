@@ -4,7 +4,12 @@ import { notFound } from "next/navigation"
 import { Icon } from "@/components/icon"
 import { getPublishedOpportunityById } from "@/lib/queries"
 import { opportunityTypeLabel } from "@/lib/constants"
-import { locationLabel, relativeTime } from "@/lib/utils"
+import {
+  formatDateOnly,
+  locationLabel,
+  relativeTime,
+  whatsappLink,
+} from "@/lib/utils"
 
 export const instant = false
 
@@ -25,6 +30,30 @@ export async function generateMetadata({
   }
 }
 
+function Fact({
+  icon,
+  label,
+  value,
+}: {
+  icon: string
+  label: string
+  value: string
+}) {
+  return (
+    <div className="bg-[#FAFAF7] border border-[#E4E9E3] rounded-xl p-4">
+      <div className="flex items-center gap-1.5 text-outline mb-1">
+        <Icon name={icon} className="text-[16px]" />
+        <span className="font-label-sm text-label-sm uppercase tracking-wide">
+          {label}
+        </span>
+      </div>
+      <p className="font-body-md text-body-md text-[#202923] font-medium">
+        {value}
+      </p>
+    </div>
+  )
+}
+
 export default async function OpportunityDetailPage({
   params,
 }: {
@@ -37,6 +66,16 @@ export default async function OpportunityDetailPage({
   const location = opportunity.is_international
     ? "Open to international partners"
     : locationLabel(opportunity.city, opportunity.country)
+  const whatsappHref = opportunity.whatsapp
+    ? whatsappLink(
+        opportunity.whatsapp,
+        `Hi, I am responding to your Tradeza opportunity: "${opportunity.title}".`
+      )
+    : null
+  const hasContact = Boolean(
+    opportunity.whatsapp || opportunity.public_phone || opportunity.public_email
+  )
+  const deadline = formatDateOnly(opportunity.deadline)
 
   return (
     <section className="py-12 md:py-16">
@@ -69,9 +108,47 @@ export default async function OpportunityDetailPage({
               />
               <span>{location}</span>
             </div>
+
+            {whatsappHref && (
+              <div className="mt-6">
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 bg-primary-container hover:bg-[#1C573F] text-on-primary font-label-lg text-label-lg font-semibold px-6 py-3 rounded-xl transition-all shadow-sm"
+                >
+                  <Icon name="chat" className="text-[20px]" />
+                  Chat on WhatsApp
+                </a>
+              </div>
+            )}
           </div>
 
           <div className="p-8">
+            {(opportunity.budget ||
+              opportunity.quantity ||
+              deadline) && (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
+                {opportunity.budget && (
+                  <Fact
+                    icon="sell"
+                    label="Budget / rate"
+                    value={opportunity.budget}
+                  />
+                )}
+                {opportunity.quantity && (
+                  <Fact
+                    icon="inventory"
+                    label="Quantity"
+                    value={opportunity.quantity}
+                  />
+                )}
+                {deadline && (
+                  <Fact icon="event" label="Needed by" value={deadline} />
+                )}
+              </div>
+            )}
+
             {opportunity.description && (
               <div className="mb-8">
                 <h2 className="font-headline-sm text-headline-sm text-[#202923] font-bold mb-3">
@@ -104,7 +181,41 @@ export default async function OpportunityDetailPage({
               <h2 className="font-headline-sm text-headline-sm text-[#202923] font-bold mb-4">
                 Contact
               </h2>
+
+              {opportunity.contact_name && (
+                <p className="font-body-md text-body-md text-[#202923] font-semibold mb-3">
+                  {opportunity.contact_name}
+                </p>
+              )}
+
               <div className="flex flex-col gap-3">
+                {opportunity.whatsapp && (
+                  <a
+                    href={whatsappLink(
+                      opportunity.whatsapp,
+                      `Hi, I am responding to your Tradeza opportunity: "${opportunity.title}".`
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-primary hover:text-[#1C573F] font-body-md text-body-md font-medium"
+                  >
+                    <Icon name="chat" className="text-[18px]" />
+                    <span className="underline underline-offset-2">
+                      WhatsApp {opportunity.whatsapp}
+                    </span>
+                  </a>
+                )}
+                {opportunity.public_phone && (
+                  <a
+                    href={`tel:${opportunity.public_phone.replace(/[^\d+]/g, "")}`}
+                    className="inline-flex items-center gap-2 text-primary hover:text-[#1C573F] font-body-md text-body-md font-medium"
+                  >
+                    <Icon name="call" className="text-[18px]" />
+                    <span className="underline underline-offset-2">
+                      {opportunity.public_phone}
+                    </span>
+                  </a>
+                )}
                 {opportunity.public_email && (
                   <a
                     href={`mailto:${opportunity.public_email}`}
@@ -116,23 +227,17 @@ export default async function OpportunityDetailPage({
                     </span>
                   </a>
                 )}
-                {opportunity.public_phone && (
-                  <a
-                    href={`tel:${opportunity.public_phone}`}
-                    className="inline-flex items-center gap-2 text-primary hover:text-[#1C573F] font-body-md text-body-md font-medium"
-                  >
-                    <Icon name="call" className="text-[18px]" />
-                    <span className="underline underline-offset-2">
-                      {opportunity.public_phone}
-                    </span>
-                  </a>
-                )}
-                {!opportunity.public_email && !opportunity.public_phone && (
+                {!hasContact && (
                   <p className="font-body-sm text-body-sm text-[#66716A]">
                     Contact the poster through their business profile.
                   </p>
                 )}
               </div>
+
+              <p className="mt-6 font-body-sm text-body-sm text-outline">
+                Deal directly with the poster. Always verify the business and
+                confirm rates before paying any advance.
+              </p>
             </div>
           </div>
         </div>

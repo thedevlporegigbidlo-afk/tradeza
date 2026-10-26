@@ -75,3 +75,54 @@ export function locationLabel(
 ): string {
   return [city, country].filter(Boolean).join(", ")
 }
+
+// Builds a wa.me link from whatever number the owner typed. Bare 10-digit
+// Indian numbers get the +91 prefix, `00` international prefixes are dropped.
+export function whatsappLink(phone: string, message?: string): string {
+  let digits = phone.replace(/\D/g, "")
+  if (digits.startsWith("00")) digits = digits.slice(2)
+  if (digits.length === 11 && digits.startsWith("0")) {
+    digits = `91${digits.slice(1)}`
+  } else if (digits.length === 10) {
+    digits = `91${digits}`
+  }
+  const query = message ? `?text=${encodeURIComponent(message)}` : ""
+  return `https://wa.me/${digits}${query}`
+}
+
+// Products/services are entered as free text (one per line or comma
+// separated). This turns that into clean, de-duplicated chips.
+export function splitList(text: string | null | undefined): string[] {
+  if (!text) return []
+  const parts = text
+    .split(/[\n,;|•]+/)
+    .map((part) => part.trim())
+    .filter(Boolean)
+  return [...new Set(parts)].slice(0, 24)
+}
+
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+]
+
+// Formats a Postgres `date` (YYYY-MM-DD) without timezone drift.
+export function formatDateOnly(value: string | null): string | null {
+  if (!value) return null
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value)
+  if (!match) return value
+  const [, year, month, day] = match
+  const monthName = MONTHS[Number(month) - 1]
+  if (!monthName) return value
+  return `${Number(day)} ${monthName} ${year}`
+}
