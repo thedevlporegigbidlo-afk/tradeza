@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400" role="img" aria-label="GO logo">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="hsl(120 48% 44%)"/>
+    <stop offset="1" stop-color="hsl(160 52% 26%)"/>
+  </linearGradient>
+</defs>
+<rect width="400" height="400" fill="url(#bg)"/>
+<circle cx="200" cy="200" r="152" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="2"/>
+<circle cx="200" cy="200" r="176" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+<text x="200" y="208" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI, Arial, sans-serif" font-size="136" font-weight="700" fill="#ffffff" letter-spacing="-2">GO</text>
+<text x="200" y="300" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="22" fill="rgba(255,255,255,0.72)" letter-spacing="3">TRADEZA DEMO</text>
+<!-- greenroot-organics -->
+</svg>

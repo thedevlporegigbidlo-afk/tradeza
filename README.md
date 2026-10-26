@@ -105,6 +105,8 @@ scripts/            verification tooling
 
 ## Notes
 
+- `supabase/seed/demo_data.sql` loads 19 sample businesses, 12 opportunities and local demo artwork from `public/demo/` (regenerate images with `node scripts/generate-demo-images.mjs`). It is safe to re-run; cleanup SQL is at the bottom of the file. All demo contacts use `example.com` and dummy numbers.
+
 - Listings are created as drafts; publishing is an explicit owner action.
 - Draft businesses are visible to their owner only, via `/my-business/[id]/preview`.
 - Business listings carry a WhatsApp number, contact person, products, price range, MOQ, service areas, year established, a logo, and up to 8 gallery photos. Photos are uploaded straight from the browser to Supabase Storage, so no server action body limits apply.
