@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tradeza — Good businesses connect here</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration with Design System Visual Tokens -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-surface": "#29332c",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-fixed": "#3a090b",
+            "on-tertiary": "#ffffff",
+            "on-secondary-fixed": "#171d1a",
+            "error-container": "#ffdad6",
+            "surface": "#f2fcf2",
+            "primary-fixed-dim": "#8ed5b4",
+            "surface-container-high": "#e1ebe1",
+            "surface-variant": "#dbe5dc",
+            "tertiary-fixed-dim": "#ffb3b0",
+            "surface-container-highest": "#dbe5dc",
+            "surface-container-low": "#ecf6ed",
+            "inverse-on-surface": "#e9f3ea",
+            "on-error": "#ffffff",
+            "secondary-fixed-dim": "#c2c8c2",
+            "surface-container": "#e6f1e7",
+            "primary-container": "#236b50",
+            "on-secondary": "#ffffff",
+            "primary": "#00523a",
+            "on-background": "#151e18",
+            "on-surface-variant": "#3f4943",
+            "on-secondary-fixed-variant": "#424844",
+            "tertiary-container": "#904b4a",
+            "on-tertiary-container": "#ffcecc",
+            "on-primary": "#ffffff",
+            "error": "#ba1a1a",
+            "tertiary": "#733434",
+            "surface-tint": "#226a4f",
+            "on-primary-fixed-variant": "#005139",
+            "on-error-container": "#93000a",
+            "on-secondary-container": "#5e6460",
+            "on-surface": "#151e18",
+            "on-primary-container": "#a1e9c7",
+            "on-primary-fixed": "#002115",
+            "background": "#f2fcf2",
+            "inverse-primary": "#8ed5b4",
+            "outline": "#6f7973",
+            "tertiary-fixed": "#ffdad8",
+            "surface-dim": "#d3ddd3",
+            "surface-bright": "#f2fcf2",
+            "outline-variant": "#bfc9c2",
+            "secondary-fixed": "#dee4de",
+            "on-tertiary-fixed-variant": "#723333",
+            "primary-fixed": "#aaf2cf",
+            "secondary": "#5a605b",
+            "secondary-container": "#dbe1db"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "margin": "3rem",
+            "margin-mobile": "1rem",
+            "gutter": "1.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "gutter-mobile": "1rem",
+            "space-xl": "2.5rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "headline-sm": ["Inter"],
+            "display-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "headline-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "label-lg": ["Inter"],
+            "label-sm": ["Inter"],
+            "label-md": ["Inter"],
+            "headline-lg": ["Inter"],
+            "headline-lg-mobile": ["Inter"],
+            "body-md": ["Inter"]
+          },
+          "fontSize": {
+            "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "500" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "headline-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "headline-lg-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .custom-card-shadow {
+      box-shadow: 0 1px 3px rgba(32, 41, 35, 0.04), 0 4px 12px rgba(32, 41, 35, 0.03);
+    }
+    .custom-card-shadow:hover {
+      box-shadow: 0 4px 8px rgba(32, 41, 35, 0.04), 0 12px 24px rgba(32, 41, 35, 0.06);
+    }
+  </style>
+</head>
+<body class="bg-[#FAFAF7] text-on-surface antialiased min-h-screen flex flex-col font-body-md text-body-md selection:bg-surface-container selection:text-primary">
+<!-- TOP APP BAR / HEADER (Shared Component Execution) -->
+<header class="bg-surface-container-lowest dark:bg-inverse-surface border-b border-outline-variant dark:border-outline shadow-sm dark:shadow-none docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full max-w-7xl mx-auto px-6 h-20">
+<!-- Brand Logo / Product Name with SVG mark https://lh3.googleusercontent.com/aida/AEtjO1Vq0PwQBsRXKy0TZhpt7y-_qh2VMVg7IVfN3ghS5FcGGTUjP0WECc6TtbrvJh3ifx9sKZzKur5bOJ8j176VO21scaH96yvNa8YF3r4Zfdtg23wWB1_jId5GoqPczlttsBrU57OmiHylehVGhzJDF2bbnZMdHqTa-j1b8n1HzbKvRB3F22JcjYquxPVd8QK4i2aEZkmyFrDOGWOsV5iYcCyLKPsmLvAPMKb79G3GEHUdoiTt2zfhaj5g -->
+<a class="flex items-center gap-3 active:scale-[0.99] transition-transform duration-100 group" href="#">
+<img alt="Tradeza Brand Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Vq0PwQBsRXKy0TZhpt7y-_qh2VMVg7IVfN3ghS5FcGGTUjP0WECc6TtbrvJh3ifx9sKZzKur5bOJ8j176VO21scaH96yvNa8YF3r4Zfdtg23wWB1_jId5GoqPczlttsBrU57OmiHylehVGhzJDF2bbnZMdHqTa-j1b8n1HzbKvRB3F22JcjYquxPVd8QK4i2aEZkmyFrDOGWOsV5iYcCyLKPsmLvAPMKb79G3GEHUdoiTt2zfhaj5g"/>
+<span class="sr-only">Tradeza</span>
+</a>
+<!-- Center Desktop Navigation Links -->
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-primary dark:text-primary-fixed font-semibold border-b-2 border-primary dark:border-primary-fixed pb-1 font-label-lg text-label-lg transition-colors" href="#businesses">Explore Businesses</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed font-medium transition-colors font-label-lg text-label-lg pb-1" href="#opportunities">Opportunities</a>
+</nav>
+<!-- Trailing Action Cluster -->
+<div class="flex items-center gap-4">
+<a class="text-on-surface-variant hover:text-primary font-label-lg text-label-lg px-3 py-2 transition-colors active:scale-[0.99]" href="#">Log in</a>
+<a class="bg-primary-container hover:bg-[#1C573F] active:scale-[0.99] text-on-primary font-label-lg text-label-lg px-5 py-2.5 rounded-xl transition-all duration-150 shadow-sm flex items-center gap-1.5" href="#list-business">
+<span>List Your Business</span>
+</a>
+</div>
+</div>
+</header>
+<!-- MAIN CONTENT CONTAINER -->
+<main class="flex-grow">
+<!-- HERO SECTION -->
+<section class="relative overflow-hidden pt-12 pb-16 md:pt-20 md:pb-24 border-b border-[#E4E9E3]">
+<div class="max-w-7xl mx-auto px-6">
+<div class="max-w-3xl mx-auto text-center flex flex-col items-center">
+<!-- Welcoming Pill Tag -->
+<div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EDF3ED] border border-[#CCD5CB] text-primary mb-6">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold">Global Business Discovery</span>
+</div>
+<!-- Main Hero Headline -->
+<h1 class="font-display-lg text-headline-lg-mobile md:text-display-lg text-[#202923] mb-5 tracking-tight font-bold">
+            Your next business connection starts here.
+          </h1>
+<!-- Supporting Text -->
+<p class="font-body-lg text-body-lg text-[#66716A] mb-8 max-w-2xl text-center leading-relaxed">
+            Discover businesses, find the right suppliers, and explore opportunities to grow together.
+          </p>
+<!-- Search Bar Container -->
+<div class="w-full max-w-2xl bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl p-2 custom-card-shadow mb-6 transition-all focus-within:border-primary-container focus-within:ring-4 focus-within:ring-primary-container/10">
+<form action="#search" class="flex flex-col sm:flex-row items-center gap-2">
+<div class="flex items-center gap-3 pl-3 w-full py-1">
+<span class="material-symbols-outlined text-outline" data-icon="search">search</span>
+<input class="w-full bg-transparent border-0 p-0 text-on-surface font-body-md text-body-md placeholder:text-outline focus:ring-0 focus:outline-none" placeholder="Search businesses, products, or services…" type="text"/>
+</div>
+<button class="w-full sm:w-auto bg-primary-container hover:bg-[#1C573F] active:scale-[0.99] text-on-primary font-label-lg text-label-lg px-7 py-3 rounded-xl transition-all duration-150 flex items-center justify-center shrink-0" type="submit">
+                Search
+              </button>
+</form>
+</div>
+<!-- Suggested Searches Row (Clickable Pill Badges) -->
+<div class="flex flex-wrap items-center justify-center gap-2 mb-10 text-center">
+<span class="font-label-md text-label-md text-[#66716A] mr-1">Suggested:</span>
+<a class="bg-surface-container-lowest hover:bg-[#EDF3ED] hover:text-primary text-[#3F4943] border border-[#E4E9E3] rounded-full px-3.5 py-1 font-label-md text-label-md transition-all active:scale-[0.98]" href="#">Manufacturers</a>
+<a class="bg-surface-container-lowest hover:bg-[#EDF3ED] hover:text-primary text-[#3F4943] border border-[#E4E9E3] rounded-full px-3.5 py-1 font-label-md text-label-md transition-all active:scale-[0.98]" href="#">Wholesale</a>
+<a class="bg-surface-container-lowest hover:bg-[#EDF3ED] hover:text-primary text-[#3F4943] border border-[#E4E9E3] rounded-full px-3.5 py-1 font-label-md text-label-md transition-all active:scale-[0.98]" href="#">IT Services</a>
+<a class="bg-surface-container-lowest hover:bg-[#EDF3ED] hover:text-primary text-[#3F4943] border border-[#E4E9E3] rounded-full px-3.5 py-1 font-label-md text-label-md transition-all active:scale-[0.98]" href="#">Distributors</a>
+</div>
+<!-- Action CTA Cluster -->
+<div class="flex flex-wrap items-center justify-center gap-4">
+<a class="bg-primary-container hover:bg-[#1C573F] text-on-primary font-label-lg text-label-lg px-6 py-3 rounded-xl transition-all active:scale-[0.99] shadow-sm" href="#businesses">
+              Explore Businesses
+            </a>
+<a class="bg-surface-container-lowest hover:bg-[#FAFAF7] text-[#202923] border border-[#E4E9E3] hover:border-[#CCD5CB] font-label-lg text-label-lg px-6 py-3 rounded-xl transition-all active:scale-[0.99]" href="#list-business">
+              List Your Business
+            </a>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 3: BROWSE CATEGORIES -->
+<section class="py-16 md:py-20 border-b border-[#E4E9E3]">
+<div class="max-w-7xl mx-auto px-6">
+<!-- Header & Subtitle -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-[#202923] font-bold tracking-tight">Explore by category</h2>
+<p class="font-body-md text-body-md text-[#66716A] mt-1">Find the businesses you need.</p>
+</div>
+<span class="hidden md:inline-flex items-center text-outline font-label-md text-label-md gap-1">
+<span class="material-symbols-outlined text-[18px]" data-icon="category">category</span>
+            5 Core Classifications
+          </span>
+</div>
+<!-- 5 Clean Category Cards (Responsive Bento / Fluid Grid) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+<!-- Category 1 -->
+<a class="group bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl p-6 custom-card-shadow hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between" href="#">
+<div>
+<div class="w-12 h-12 rounded-xl bg-[#EDF3ED] text-primary flex items-center justify-center mb-5 group-hover:bg-primary-container group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[26px]" data-icon="storefront">storefront</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-[#202923] mb-2 font-semibold">Trading &amp; Wholesale</h3>
+<p class="font-body-sm text-body-sm text-[#66716A] leading-relaxed">Buying, selling, import/export, and wholesale products.</p>
+</div>
+<div class="pt-6 mt-4 border-t border-[#E4E9E3]/60 flex items-center justify-between text-primary font-label-md text-label-md font-semibold">
+<span>Browse directory</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</a>
+<!-- Category 2 -->
+<a class="group bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl p-6 custom-card-shadow hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between" href="#">
+<div>
+<div class="w-12 h-12 rounded-xl bg-[#EDF3ED] text-primary flex items-center justify-center mb-5 group-hover:bg-primary-container group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[26px]" data-icon="precision_manufacturing">precision_manufacturing</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-[#202923] mb-2 font-semibold">Manufacturing &amp; Products</h3>
+<p class="font-body-sm text-body-sm text-[#66716A] leading-relaxed">Manufacturers, product makers, OEM/ODM, and raw materials.</p>
+</div>
+<div class="pt-6 mt-4 border-t border-[#E4E9E3]/60 flex items-center justify-between text-primary font-label-md text-label-md font-semibold">
+<span>Browse directory</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</a>
+<!-- Category 3 -->
+<a class="group bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl p-6 custom-card-shadow hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between" href="#">
+<div>
+<div class="w-12 h-12 rounded-xl bg-[#EDF3ED] text-primary flex items-center justify-center mb-5 group-hover:bg-primary-container group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[26px]" data-icon="local_shipping">local_shipping</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-[#202923] mb-2 font-semibold">Distribution &amp; Supply</h3>
+<p class="font-body-sm text-body-sm text-[#66716A] leading-relaxed">Suppliers, distributors, stockists, dealers, and sourcing.</p>
+</div>
+<div class="pt-6 mt-4 border-t border-[#E4E9E3]/60 flex items-center justify-between text-primary font-label-md text-label-md font-semibold">
+<span>Browse directory</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</a>
+<!-- Category 4 -->
+<a class="group bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl p-6 custom-card-shadow hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between" href="#">
+<div>
+<div class="w-12 h-12 rounded-xl bg-[#EDF3ED] text-primary flex items-center justify-center mb-5 group-hover:bg-primary-container group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[26px]" data-icon="terminal">terminal</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-[#202923] mb-2 font-semibold">IT &amp; Digital Services</h3>
+<p class="font-body-sm text-body-sm text-[#66716A] leading-relaxed">Websites, software, marketing, design, and digital services.</p>
+</div>
+<div class="pt-6 mt-4 border-t border-[#E4E9E3]/60 flex items-center justify-between text-primary font-label-md text-label-md font-semibold">
+<span>Browse directory</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</a>
+<!-- Category 5 -->
+<a class="group bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl p-6 custom-card-shadow hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between sm:col-span-2 lg:col-span-1 xl:col-span-1" href="#">
+<div>
+<div class="w-12 h-12 rounded-xl bg-[#EDF3ED] text-primary flex items-center justify-center mb-5 group-hover:bg-primary-container group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[26px]" data-icon="handshake">handshake</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-[#202923] mb-2 font-semibold">Business Services &amp; Partnerships</h3>
+<p class="font-body-sm text-body-sm text-[#66716A] leading-relaxed">Business support, reselling, collaborations, and partnerships.</p>
+</div>
+<div class="pt-6 mt-4 border-t border-[#E4E9E3]/60 flex items-center justify-between text-primary font-label-md text-label-md font-semibold">
+<span>Browse directory</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</a>
+</div>
+</div>
+</section>
+<!-- SECTION 4: FEATURED BUSINESSES -->
+<section class="py-16 md:py-20 border-b border-[#E4E9E3]" id="businesses">
+<div class="max-w-7xl mx-auto px-6">
+<div class="flex items-center justify-between mb-10">
+<div>
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-[#202923] font-bold tracking-tight">Businesses to discover</h2>
+<p class="font-body-md text-body-md text-[#66716A] mt-1">Authentic, operational enterprises seeking global trade and partnerships.</p>
+</div>
+<a class="inline-flex items-center gap-1.5 text-primary hover:text-[#1C573F] font-label-lg text-label-lg font-semibold group transition-colors" href="#">
+<span>View all businesses</span>
+<span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<!-- 4 Fictional Sample Business Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Card 1: Northstar Solar Supply -->
+<div class="bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl overflow-hidden custom-card-shadow hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group">
+<div class="p-6">
+<!-- Header Cap / Monogram & Badge -->
+<div class="flex items-start justify-between gap-3 mb-5">
+<div class="w-12 h-12 rounded-xl bg-[#EDF3ED] text-[#236B50] flex items-center justify-center font-bold font-headline-sm text-headline-sm border border-[#E4E9E3]">
+                  NS
+                </div>
+<span class="inline-block bg-[#EDF3ED] text-[#236B50] font-label-sm text-label-sm font-semibold px-2.5 py-1 rounded-full">
+                  Distribution &amp; Supply
+                </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-[#202923] font-bold mb-2 group-hover:text-primary transition-colors">Northstar Solar Supply</h3>
+<!-- Location with Pin -->
+<div class="flex items-center gap-1.5 text-outline mb-4 font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="location_on">location_on</span>
+<span>Jaipur, India</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#66716A] leading-relaxed">
+                Supplies solar components and supports local installation businesses across South Asia.
+              </p>
+</div>
+<div class="px-6 py-4 bg-[#FAFAF7] border-t border-[#E4E9E3] flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline">Verified Profile</span>
+<a class="text-primary hover:text-[#1C573F] font-label-md text-label-md font-semibold inline-flex items-center gap-1" href="#">
+<span>View Business</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Card 2: Aethelgard Precision Machining -->
+<div class="bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl overflow-hidden custom-card-shadow hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group">
+<div class="p-6">
+<div class="flex items-start justify-between gap-3 mb-5">
+<div class="w-12 h-12 rounded-xl bg-[#EDF3ED] text-[#236B50] flex items-center justify-center font-bold font-headline-sm text-headline-sm border border-[#E4E9E3]">
+                  AP
+                </div>
+<span class="inline-block bg-[#EDF3ED] text-[#236B50] font-label-sm text-label-sm font-semibold px-2.5 py-1 rounded-full">
+                  Manufacturing &amp; Products
+                </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-[#202923] font-bold mb-2 group-hover:text-primary transition-colors">Aethelgard Precision Machining</h3>
+<div class="flex items-center gap-1.5 text-outline mb-4 font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="location_on">location_on</span>
+<span>Stuttgart, Germany</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#66716A] leading-relaxed">
+                High-tolerance metal parts and custom CNC components for industrial machinery.
+              </p>
+</div>
+<div class="px-6 py-4 bg-[#FAFAF7] border-t border-[#E4E9E3] flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline">Verified Profile</span>
+<a class="text-primary hover:text-[#1C573F] font-label-md text-label-md font-semibold inline-flex items-center gap-1" href="#">
+<span>View Business</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Card 3: Kibo Organic Exports -->
+<div class="bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl overflow-hidden custom-card-shadow hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group">
+<div class="p-6">
+<div class="flex items-start justify-between gap-3 mb-5">
+<div class="w-12 h-12 rounded-xl bg-[#EDF3ED] text-[#236B50] flex items-center justify-center font-bold font-headline-sm text-headline-sm border border-[#E4E9E3]">
+                  KO
+                </div>
+<span class="inline-block bg-[#EDF3ED] text-[#236B50] font-label-sm text-label-sm font-semibold px-2.5 py-1 rounded-full">
+                  Trading &amp; Wholesale
+                </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-[#202923] font-bold mb-2 group-hover:text-primary transition-colors">Kibo Organic Exports</h3>
+<div class="flex items-center gap-1.5 text-outline mb-4 font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="location_on">location_on</span>
+<span>Mombasa, Kenya</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#66716A] leading-relaxed">
+                Direct sourcing and global export of ethically harvested coffee, tea, and botanical spices.
+              </p>
+</div>
+<div class="px-6 py-4 bg-[#FAFAF7] border-t border-[#E4E9E3] flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline">Verified Profile</span>
+<a class="text-primary hover:text-[#1C573F] font-label-md text-label-md font-semibold inline-flex items-center gap-1" href="#">
+<span>View Business</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Card 4: Velox Cloud & Systems -->
+<div class="bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl overflow-hidden custom-card-shadow hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group">
+<div class="p-6">
+<div class="flex items-start justify-between gap-3 mb-5">
+<div class="w-12 h-12 rounded-xl bg-[#EDF3ED] text-[#236B50] flex items-center justify-center font-bold font-headline-sm text-headline-sm border border-[#E4E9E3]">
+                  VC
+                </div>
+<span class="inline-block bg-[#EDF3ED] text-[#236B50] font-label-sm text-label-sm font-semibold px-2.5 py-1 rounded-full">
+                  IT &amp; Digital Services
+                </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-[#202923] font-bold mb-2 group-hover:text-primary transition-colors">Velox Cloud &amp; Systems</h3>
+<div class="flex items-center gap-1.5 text-outline mb-4 font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="location_on">location_on</span>
+<span>São Paulo, Brazil</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#66716A] leading-relaxed">
+                Software engineering, cloud infrastructure, and localized ERP integration for mid-sized enterprises.
+              </p>
+</div>
+<div class="px-6 py-4 bg-[#FAFAF7] border-t border-[#E4E9E3] flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline">Verified Profile</span>
+<a class="text-primary hover:text-[#1C573F] font-label-md text-label-md font-semibold inline-flex items-center gap-1" href="#">
+<span>View Business</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 5: LATEST OPPORTUNITIES -->
+<section class="py-16 md:py-20 border-b border-[#E4E9E3]" id="opportunities">
+<div class="max-w-7xl mx-auto px-6">
+<div class="mb-10">
+<div class="flex items-center gap-2 mb-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="font-label-sm text-label-sm font-bold text-primary uppercase tracking-wide">Live Deal Flow</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-[#202923] font-bold tracking-tight">Business opportunities</h2>
+<p class="font-body-md text-body-md text-[#66716A] mt-1">Explore active requests from businesses worldwide.</p>
+</div>
+<!-- 3 Clean Opportunity Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Opportunity 1 -->
+<div class="bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl p-6 custom-card-shadow flex flex-col justify-between hover:-translate-y-1 transition-all duration-200">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="inline-block bg-[#EDF3ED] text-[#236B50] font-label-sm text-label-sm font-semibold px-3 py-1 rounded-full border border-[#CCD5CB]">
+                  Supplier Needed
+                </span>
+<span class="font-label-sm text-label-sm text-outline">2 days ago</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-[#202923] font-bold mb-3 leading-snug">
+                Looking for sustainable packaging suppliers
+              </h3>
+<div class="flex items-center gap-1.5 text-outline mb-4 font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="public">public</span>
+<span>Open to international partners</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#66716A] leading-relaxed mb-6">
+                A growing consumer goods brand seeking certified compostable and recycled packaging suppliers.
+              </p>
+</div>
+<div class="pt-4 border-t border-[#E4E9E3] flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-[18px]" data-icon="verified_user">verified_user</span>
+<span class="font-label-sm text-label-sm text-[#66716A]">Direct Request</span>
+</div>
+<a class="text-primary hover:text-[#1C573F] font-label-md text-label-md font-semibold inline-flex items-center gap-1 group" href="#">
+<span>View Details</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Opportunity 2 -->
+<div class="bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl p-6 custom-card-shadow flex flex-col justify-between hover:-translate-y-1 transition-all duration-200">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="inline-block bg-[#EDF3ED] text-[#236B50] font-label-sm text-label-sm font-semibold px-3 py-1 rounded-full border border-[#CCD5CB]">
+                  Distributor Wanted
+                </span>
+<span class="font-label-sm text-label-sm text-outline">4 days ago</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-[#202923] font-bold mb-3 leading-snug">
+                Regional distributor wanted for eco-friendly cleaning line
+              </h3>
+<div class="flex items-center gap-1.5 text-outline mb-4 font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="location_on">location_on</span>
+<span>Rotterdam, Netherlands</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#66716A] leading-relaxed mb-6">
+                Seeking established B2B and retail distribution partners across Western Europe.
+              </p>
+</div>
+<div class="pt-4 border-t border-[#E4E9E3] flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-[18px]" data-icon="verified_user">verified_user</span>
+<span class="font-label-sm text-label-sm text-[#66716A]">Exclusive Territory</span>
+</div>
+<a class="text-primary hover:text-[#1C573F] font-label-md text-label-md font-semibold inline-flex items-center gap-1 group" href="#">
+<span>View Details</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Opportunity 3 -->
+<div class="bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl p-6 custom-card-shadow flex flex-col justify-between hover:-translate-y-1 transition-all duration-200">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="inline-block bg-[#EDF3ED] text-[#236B50] font-label-sm text-label-sm font-semibold px-3 py-1 rounded-full border border-[#CCD5CB]">
+                  Partnership
+                </span>
+<span class="font-label-sm text-label-sm text-outline">1 week ago</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-[#202923] font-bold mb-3 leading-snug">
+                Joint venture partner for cross-border logistics hub
+              </h3>
+<div class="flex items-center gap-1.5 text-outline mb-4 font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="location_on">location_on</span>
+<span>Singapore</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#66716A] leading-relaxed mb-6">
+                Looking for an established freight forwarding partner to expand Southeast Asia warehousing.
+              </p>
+</div>
+<div class="pt-4 border-t border-[#E4E9E3] flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-[18px]" data-icon="verified_user">verified_user</span>
+<span class="font-label-sm text-label-sm text-[#66716A]">Strategic Alliance</span>
+</div>
+<a class="text-primary hover:text-[#1C573F] font-label-md text-label-md font-semibold inline-flex items-center gap-1 group" href="#">
+<span>View Details</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 6: SIMPLE CALL TO ACTION (CTA) -->
+<section class="py-16 md:py-24" id="list-business">
+<div class="max-w-7xl mx-auto px-6">
+<div class="bg-[#EDF3ED] border border-[#CCD5CB] rounded-3xl p-8 md:p-14 text-center max-w-4xl mx-auto custom-card-shadow relative overflow-hidden">
+<div class="relative z-10">
+<!-- Icon Symbol -->
+<div class="w-14 h-14 bg-surface-container-lowest text-primary rounded-2xl mx-auto flex items-center justify-center mb-6 shadow-sm">
+<span class="material-symbols-outlined text-[30px]" data-icon="domain_add">domain_add</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-[#202923] font-bold tracking-tight mb-4">
+              Let people discover your business.
+            </h2>
+<p class="font-body-lg text-body-lg text-[#66716A] max-w-xl mx-auto mb-8 leading-relaxed">
+              Create a simple business profile and help the right people find you.
+            </p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+<a class="w-full sm:w-auto bg-primary-container hover:bg-[#1C573F] active:scale-[0.99] text-on-primary font-label-lg text-label-lg px-8 py-3.5 rounded-xl transition-all duration-150 shadow-sm flex items-center justify-center gap-2" href="#">
+<span>List Your Business</span>
+<span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<div class="mt-6 flex items-center justify-center gap-6 text-outline font-label-sm text-label-sm">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="check_circle">check_circle</span> No upfront fees
+              </span>
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="check_circle">check_circle</span> Direct peer-to-peer outreach
+              </span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- WEB FOOTER (Shared Component Execution & Spec Compliant) -->
+<footer class="bg-surface-container-low dark:bg-inverse-surface border-t border-outline-variant dark:border-outline flat no shadows full-width">
+<div class="w-full max-w-7xl mx-auto px-6 py-12">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-10 pb-8 border-b border-[#E4E9E3] dark:border-outline">
+<!-- Logo & Brand Statement -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-3">
+<img alt="Tradeza Brand Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Vq0PwQBsRXKy0TZhpt7y-_qh2VMVg7IVfN3ghS5FcGGTUjP0WECc6TtbrvJh3ifx9sKZzKur5bOJ8j176VO21scaH96yvNa8YF3r4Zfdtg23wWB1_jId5GoqPczlttsBrU57OmiHylehVGhzJDF2bbnZMdHqTa-j1b8n1HzbKvRB3F22JcjYquxPVd8QK4i2aEZkmyFrDOGWOsV5iYcCyLKPsmLvAPMKb79G3GEHUdoiTt2zfhaj5g"/>
+</div>
+<p class="font-body-sm text-body-sm text-[#66716A] dark:text-surface-variant">Good businesses connect here.</p>
+</div>
+<!-- Primary Navigation Cluster -->
+<nav class="flex flex-wrap items-center gap-6 font-label-md text-label-md">
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#businesses">Explore Businesses</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#opportunities">Opportunities</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#list-business">List Your Business</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">About Us</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Terms of Service</a>
+</nav>
+</div>
+<!-- Legal & Copyright Row -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 font-body-sm text-body-sm text-[#66716A] dark:text-surface-variant">
+<p>© 2025 Tradeza. All rights reserved.</p>
+<div class="flex items-center gap-6">
+<span class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+            Global Enterprise Network
+          </span>
+<a class="hover:text-primary transition-colors" href="#">Support &amp; Compliance</a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>
