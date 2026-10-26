@@ -1,0 +1,21 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
+  <!-- Subtle warm background container with rounded corners suited for app icon / avatar -->
+  <rect width="512" height="512" rx="112" fill="#236B50" />
+  
+  <!-- Subtle inner gradient highlight / soft rim lighting for a premium feel -->
+  <rect x="12" y="12" width="488" height="488" rx="100" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="6" />
+
+  <!-- Center brand mark: Tradeza connected nodes geometric symbol scaled & balanced for favicon/profile -->
+  <g transform="translate(116, 176)">
+    <!-- Connecting bridge bar -->
+    <rect x="70" y="64" width="140" height="32" rx="16" fill="#EDF3ED" />
+    
+    <!-- Primary solid node (origin / connection) -->
+    <circle cx="70" cy="80" r="72" fill="#EDF3ED" />
+    <circle cx="70" cy="80" r="32" fill="#236B50" />
+
+    <!-- Secondary open interconnected node (network / discovery) -->
+    <circle cx="210" cy="80" r="72" fill="#236B50" stroke="#EDF3ED" stroke-width="26" />
+    <circle cx="210" cy="80" r="26" fill="#EDF3ED" />
+  </g>
+</svg>

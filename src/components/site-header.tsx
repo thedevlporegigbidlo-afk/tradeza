@@ -3,25 +3,12 @@ import { connection } from "next/server"
 import { Suspense } from "react"
 import { createClient } from "@/lib/supabase/server"
 import { SignOutButton } from "@/components/sign-out-button"
+import { TradezaLogo } from "@/components/tradeza-logo"
 
-export const LOGO_URL =
-  "https://lh3.googleusercontent.com/aida/AEtjO1Vq0PwQBsRXKy0TZhpt7y-_qh2VMVg7IVfN3ghS5FcGGTUjP0WECc6TtbrvJh3ifx9sKZzKur5bOJ8j176VO21scaH96yvNa8YF3r4Zfdtg23wWB1_jId5GoqPczlttsBrU57OmiHylehVGhzJDF2bbnZMdHqTa-j1b8n1HzbKvRB3F22JcjYquxPVd8QK4i2aEZkmyFrDOGWOsV5iYcCyLKPsmLvAPMKb79G3GEHUdoiTt2zfhaj5g"
+export const LOGO_URL = "/tradeza-mark.svg"
 
 function BrandLogo() {
-  return (
-    <Link
-      href="/"
-      className="flex items-center gap-3 active:scale-[0.99] transition-transform duration-100 group"
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        alt="Tradeza Brand Logo"
-        className="h-8 w-auto object-contain"
-        src={LOGO_URL}
-      />
-      <span className="sr-only">Tradeza</span>
-    </Link>
-  )
+  return <TradezaLogo size="md" className="group" />
 }
 
 async function HeaderAuth() {

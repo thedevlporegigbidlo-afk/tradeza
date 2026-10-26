@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Icon } from "@/components/icon"
+import { TradezaMark } from "@/components/tradeza-logo"
 
 export default function ErrorPage({
   reset,
@@ -13,9 +13,7 @@ export default function ErrorPage({
     <section className="py-16 md:py-24">
       <div className="max-w-xl mx-auto px-6">
         <div className="bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl p-8 custom-card-shadow text-center">
-          <div className="w-14 h-14 rounded-2xl bg-[#EDF3ED] text-primary flex items-center justify-center mx-auto mb-6">
-            <Icon name="cloud_off" className="text-[28px]" />
-          </div>
+          <TradezaMark size="lg" className="mx-auto mb-6" />
           <h1 className="font-headline-md text-headline-md text-[#202923] font-bold tracking-tight mb-2">
             Something went wrong
           </h1>

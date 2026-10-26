@@ -25,5 +25,4 @@ export const OPPORTUNITY_PAGE_SIZE = 12
 export const HOME_FEATURED_BUSINESSES = 4
 export const HOME_RECENT_OPPORTUNITIES = 3
 
-export const LOGO_URL =
-  "https://lh3.googleusercontent.com/aida/AEtjO1Vq0PwQBsRXKy0TZhpt7y-_qh2VMVg7IVfN3ghS5FcGGTUjP0WECc6TtbrvJh3ifx9sKZzKur5bOJ8j176VO21scaH96yvNa8YF3r4Zfdtg23wWB1_jId5GoqPczlttsBrU57OmiHylehVGhzJDF2bbnZMdHqTa-j1b8n1HzbKvRB3F22JcjYquxPVd8QK4i2aEZkmyFrDOGWOsV5iYcCyLKPsmLvAPMKb79G3GEHUdoiTt2zfhaj5g"
+export const LOGO_URL = "/tradeza-mark.svg"

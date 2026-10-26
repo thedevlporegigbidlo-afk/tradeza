@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useActionState } from "react"
 import { useFormStatus } from "react-dom"
 import { signInWithGoogle, type AuthFormState } from "@/lib/actions/auth"
+import { TradezaMark } from "@/components/tradeza-logo"
 
 function GoogleButton() {
   const { pending } = useFormStatus()
@@ -47,7 +48,13 @@ export function LoginForm({ next }: { next?: string }) {
 
   return (
     <div className="w-full max-w-md bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl p-8 custom-card-shadow">
-      <div className="text-center mb-8">
+      <div className="flex flex-col items-center text-center mb-8">
+        <div className="flex items-center gap-2.5 mb-6">
+          <TradezaMark size="lg" />
+          <span className="text-2xl font-bold tracking-tight text-[#202923]">
+            Tradeza
+          </span>
+        </div>
         <h1 className="font-headline-md text-headline-md text-[#202923] font-bold tracking-tight mb-2">
           Welcome to Tradeza
         </h1>

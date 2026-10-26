@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { LOGO_URL } from "@/components/site-header"
+import { TradezaLogo } from "@/components/tradeza-logo"
 
 export function SiteFooter() {
   return (
@@ -8,12 +8,7 @@ export function SiteFooter() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-10 pb-8 border-b border-[#E4E9E3]">
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                alt="Tradeza Brand Logo"
-                className="h-7 w-auto object-contain"
-                src={LOGO_URL}
-              />
+              <TradezaLogo size="sm" />
             </div>
             <p className="font-body-sm text-body-sm text-[#66716A]">
               Good businesses connect here.
