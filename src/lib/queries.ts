@@ -30,6 +30,21 @@ export async function getCategories(): Promise<Category[]> {
   return data ?? []
 }
 
+export async function getCategoryBusinessCounts(): Promise<
+  Record<string, number>
+> {
+  const supabase = createPublicClient()
+  const { data } = await supabase
+    .from("category_business_counts")
+    .select("category_id, business_count")
+
+  const counts: Record<string, number> = {}
+  for (const row of data ?? []) {
+    if (row.category_id) counts[row.category_id] = row.business_count ?? 0
+  }
+  return counts
+}
+
 export async function getFeaturedBusinesses(): Promise<PublicBusiness[]> {
   const supabase = createPublicClient()
   const { data } = await supabase

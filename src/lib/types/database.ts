@@ -240,6 +240,13 @@ export type Database = {
       }
     }
     Views: {
+      category_business_counts: {
+        Row: {
+          business_count: number | null
+          category_id: string | null
+        }
+        Relationships: []
+      }
       profiles_public: {
         Row: {
           avatar_url: string | null

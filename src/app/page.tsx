@@ -5,6 +5,7 @@ import { OpportunityCard } from "@/components/opportunity-card"
 import { EmptyState } from "@/components/empty-state"
 import {
   getCategories,
+  getCategoryBusinessCounts,
   getFeaturedBusinesses,
   getRecentOpportunities,
 } from "@/lib/queries"
@@ -19,12 +20,17 @@ const SUGGESTED_SEARCHES = [
 ]
 
 export default async function Home() {
-  const [categories, featuredBusinesses, recentOpportunities] =
+  const [categories, categoryCounts, featuredBusinesses, recentOpportunities] =
     await Promise.all([
       getCategories(),
+      getCategoryBusinessCounts(),
       getFeaturedBusinesses(),
       getRecentOpportunities(),
     ])
+  const totalBusinesses = Object.values(categoryCounts).reduce(
+    (sum, count) => sum + count,
+    0
+  )
 
   return (
     <>
@@ -110,36 +116,48 @@ export default async function Home() {
             </div>
             <span className="hidden md:inline-flex items-center text-outline font-label-md text-label-md gap-1">
               <Icon name="category" className="text-[18px]" />
-              {categories.length} Categories
+              {categories.length} Categories · {totalBusinesses} Businesses
             </span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
-            {categories.map((category) => (
-              <Link
-                key={category.id}
-                href={`/businesses?category=${category.id}`}
-                className="group bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl p-6 custom-card-shadow hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between"
-              >
-                <div>
-                  <div className="w-12 h-12 rounded-xl bg-[#EDF3ED] text-primary flex items-center justify-center mb-5 group-hover:bg-primary-container group-hover:text-on-primary transition-colors">
-                    <Icon name={category.icon ?? "category"} className="text-[26px]" />
+            {categories.map((category) => {
+              const count = categoryCounts[category.id] ?? 0
+              return (
+                <Link
+                  key={category.id}
+                  href={`/businesses?category=${category.id}`}
+                  className="group bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl p-6 custom-card-shadow hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="w-12 h-12 rounded-xl bg-[#EDF3ED] text-primary flex items-center justify-center mb-5 group-hover:bg-primary-container group-hover:text-on-primary transition-colors">
+                      <Icon
+                        name={category.icon ?? "category"}
+                        className="text-[26px]"
+                      />
+                    </div>
+                    <h3 className="font-headline-sm text-headline-sm text-[#202923] mb-2 font-semibold">
+                      {category.name}
+                    </h3>
+                    <p className="font-body-sm text-body-sm text-[#66716A] leading-relaxed">
+                      {category.description}
+                    </p>
                   </div>
-                  <h3 className="font-headline-sm text-headline-sm text-[#202923] mb-2 font-semibold">
-                    {category.name}
-                  </h3>
-                  <p className="font-body-sm text-body-sm text-[#66716A] leading-relaxed">
-                    {category.description}
-                  </p>
-                </div>
-                <div className="pt-6 mt-4 border-t border-[#E4E9E3]/60 flex items-center justify-between text-primary font-label-md text-label-md font-semibold">
-                  <span>Browse directory</span>
-                  <Icon
-                    name="arrow_forward"
-                    className="text-sm group-hover:translate-x-1 transition-transform"
-                  />
-                </div>
-              </Link>
-            ))}
+                  <div className="pt-6 mt-4 border-t border-[#E4E9E3]/60 flex items-center justify-between gap-2 text-primary font-label-md text-label-md font-semibold">
+                    <span className="inline-flex items-center gap-1.5">
+                      <Icon name="storefront" className="text-[16px]" />
+                      {count} {count === 1 ? "business" : "businesses"}
+                    </span>
+                    <span className="inline-flex items-center gap-1">
+                      Browse directory
+                      <Icon
+                        name="arrow_forward"
+                        className="text-sm group-hover:translate-x-1 transition-transform"
+                      />
+                    </span>
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         </div>
       </section>

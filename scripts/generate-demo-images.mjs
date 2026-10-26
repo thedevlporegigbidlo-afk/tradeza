@@ -34,7 +34,7 @@ function escapeXml(value) {
     .replace(/>/g, "&gt;")
 }
 
-function gradient(id, first, second) {
+function gradient(id, first) {
   const [h1, h2] = first
   return `<defs>
   <linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1">
