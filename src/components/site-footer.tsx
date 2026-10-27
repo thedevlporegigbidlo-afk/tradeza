@@ -39,6 +39,12 @@ export function SiteFooter() {
             >
               Post an Opportunity
             </Link>
+            <Link
+              className="text-on-surface-variant hover:text-primary transition-colors"
+              href="/pricing"
+            >
+              Pricing
+            </Link>
           </nav>
         </div>
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 font-body-sm text-body-sm text-[#66716A]">
