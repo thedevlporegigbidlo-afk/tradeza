@@ -9,7 +9,7 @@ export async function POST() {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    return NextResponse.json({ error: "Please log in to continue" }, { status: 401 })
   }
 
   try {
