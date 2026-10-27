@@ -68,6 +68,10 @@ export async function POST() {
       { status: 500 }
     )
   } catch (e) {
-    return NextResponse.json({ error: "Something went wrong" }, { status: 500 })
+    console.error("checkout error", e)
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Something went wrong" },
+      { status: 500 }
+    )
   }
 }

@@ -23,6 +23,7 @@ export function PayToList() {
       }
       window.location.href = data.url
     } catch (err) {
+      console.error(err)
       setError(err instanceof Error ? err.message : "Something went wrong")
       setLoading(false)
     }
