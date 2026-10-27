@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { redirect } from "next/navigation"
 import { Icon } from "@/components/icon"
 import { BusinessCard } from "@/components/business-card"
 import { OpportunityCard } from "@/components/opportunity-card"
@@ -12,6 +13,7 @@ import {
 
 export const instant = false
 
+
 const SUGGESTED_SEARCHES = [
   "Manufacturers",
   "Wholesale",
@@ -19,7 +21,18 @@ const SUGGESTED_SEARCHES = [
   "Distributors",
 ]
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ code?: string; next?: string }>
+}) {
+  const params = await searchParams
+  if (params.code) {
+    redirect(
+      `/auth/callback?code=${encodeURIComponent(params.code)}${params.next ? `&next=${encodeURIComponent(params.next)}` : ""}`
+    )
+  }
+
   const [categories, categoryCounts, featuredBusinesses, recentOpportunities] =
     await Promise.all([
       getCategories(),
