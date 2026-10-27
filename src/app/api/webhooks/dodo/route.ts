@@ -6,7 +6,6 @@ import type { Database } from "@/lib/types/database"
 export async function POST(request: Request) {
   try {
     const body = await request.text()
-
     const payload = JSON.parse(body)
 
     const supabase = createClient<Database>(
@@ -25,17 +24,47 @@ export async function POST(request: Request) {
       payload?.type === "payment.succeeded" ||
       payload?.event_type === "payment.succeeded" ||
       payload?.data?.status === "succeeded" ||
-      payload?.status === "succeeded"
+      payload?.status === "succeeded" ||
+      payload?.payment?.status === "succeeded"
     ) {
       const userId =
         payload?.metadata?.user_id ||
         payload?.data?.metadata?.user_id ||
         payload?.payment?.metadata?.user_id
 
+      const paymentId =
+        payload?.data?.payment_id ||
+        payload?.payment_id ||
+        payload?.id
+
+      const checkoutId =
+        payload?.data?.checkout_id || payload?.checkout_id
+
       if (userId) {
         await supabase
+          .from("payments")
+          .upsert(
+            {
+              user_id: userId,
+              dodo_payment_id: paymentId || null,
+              dodo_checkout_id: checkoutId || null,
+              product_id: env.DODO_PRODUCT_ID || null,
+              amount: 49,
+              currency: "INR",
+              status: "succeeded",
+              metadata: payload,
+            },
+            { onConflict: "dodo_payment_id" }
+          )
+          .select()
+
+        await supabase
           .from("profiles")
-          .update({ updated_at: new Date().toISOString() })
+          .update({
+            paid_at: new Date().toISOString(),
+            has_paid_listing: true,
+            updated_at: new Date().toISOString(),
+          })
           .eq("id", userId)
       }
     }
@@ -45,4 +74,5 @@ export async function POST(request: Request) {
     return NextResponse.json({ received: true })
   }
 }
+
 
