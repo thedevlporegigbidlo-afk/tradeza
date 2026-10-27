@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server"
+import { NextResponse, type NextRequest } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import { safeNextPath } from "@/lib/site"
 import { env } from "@/lib/env"
 import type { Database } from "@/lib/types/database"
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   // Prefer the configured public site URL so redirects stay on the canonical
   // host even when the request reaches us through a proxy.
