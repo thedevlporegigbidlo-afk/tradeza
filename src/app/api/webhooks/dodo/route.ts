@@ -33,15 +33,13 @@ export async function POST(request: Request) {
         payload?.payment?.metadata?.user_id
 
       const paymentId =
-        payload?.data?.payment_id ||
-        payload?.payment_id ||
-        payload?.id
-
-      const checkoutId =
-        payload?.data?.checkout_id || payload?.checkout_id
+        payload?.data?.payment_id || payload?.payment_id || payload?.id
+      const checkoutId = payload?.data?.checkout_id || payload?.checkout_id
 
       if (userId) {
-        await supabase
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const sb: any = supabase
+        await sb
           .from("payments")
           .upsert(
             {
@@ -56,9 +54,8 @@ export async function POST(request: Request) {
             },
             { onConflict: "dodo_payment_id" }
           )
-          .select()
 
-        await supabase
+        await sb
           .from("profiles")
           .update({
             paid_at: new Date().toISOString(),
@@ -74,5 +71,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ received: true })
   }
 }
-
-

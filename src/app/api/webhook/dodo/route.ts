@@ -37,23 +37,23 @@ export async function POST(request: Request) {
       const checkoutId = payload?.data?.checkout_id || payload?.checkout_id
 
       if (userId) {
-        await supabase
-          .from("payments")
-          .upsert(
-            {
-              user_id: userId,
-              dodo_payment_id: paymentId || null,
-              dodo_checkout_id: checkoutId || null,
-              product_id: env.DODO_PRODUCT_ID || null,
-              amount: 49,
-              currency: "INR",
-              status: "succeeded",
-              metadata: payload,
-            },
-            { onConflict: "dodo_payment_id" }
-          )
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const sb: any = supabase
+        await sb.from("payments").upsert(
+          {
+            user_id: userId,
+            dodo_payment_id: paymentId || null,
+            dodo_checkout_id: checkoutId || null,
+            product_id: env.DODO_PRODUCT_ID || null,
+            amount: 49,
+            currency: "INR",
+            status: "succeeded",
+            metadata: payload,
+          },
+          { onConflict: "dodo_payment_id" }
+        )
 
-        await supabase
+        await sb
           .from("profiles")
           .update({
             paid_at: new Date().toISOString(),
@@ -69,5 +69,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ received: true })
   }
 }
-
-
