@@ -6,8 +6,7 @@ import type { Database } from "@/lib/types/database"
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
-  // Prefer the configured public site URL so redirects stay on the canonical
-  // host even when the request reaches us through a proxy.
+  // Prefer the configured public site URL so redirects stay on the canonical host
   const base = (env.NEXT_PUBLIC_SITE_URL ?? origin).replace(/\/+$/, "")
   const code = searchParams.get("code")
   const next = safeNextPath(searchParams.get("next"))
@@ -15,9 +14,7 @@ export async function GET(request: NextRequest) {
 
   if (providerError) {
     const message =
-      providerError === "access_denied"
-        ? "sign_in_cancelled"
-        : "auth_error"
+      providerError === "access_denied" ? "sign_in_cancelled" : "auth_error"
     return NextResponse.redirect(
       `${base}/login?error=${encodeURIComponent(message)}`
     )
@@ -46,6 +43,8 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (!error) {
+      // Force cookie write in some environments
+      await supabase.auth.getUser()
       return redirectResponse
     }
   }
