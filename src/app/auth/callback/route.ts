@@ -5,9 +5,11 @@ import { env } from "@/lib/env"
 import type { Database } from "@/lib/types/database"
 
 export async function GET(request: NextRequest) {
-  const { searchParams, origin } = new URL(request.url)
-  // Prefer the configured public site URL so redirects stay on the canonical host
-  const base = (env.NEXT_PUBLIC_SITE_URL ?? origin).replace(/\/+$/, "")
+  const { searchParams } = new URL(request.url)
+  const base = (env.NEXT_PUBLIC_SITE_URL ?? request.nextUrl.origin).replace(
+    /\/+$/,
+    ""
+  )
   const code = searchParams.get("code")
   const next = safeNextPath(searchParams.get("next"))
   const providerError = searchParams.get("error")
@@ -20,36 +22,40 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  if (code) {
-    const redirectResponse = NextResponse.redirect(`${base}${next}`)
-
-    const supabase = createServerClient<Database>(
-      env.NEXT_PUBLIC_SUPABASE_URL,
-      env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-      {
-        cookies: {
-          getAll() {
-            return request.cookies.getAll()
-          },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              redirectResponse.cookies.set(name, value, options)
-            })
-          },
-        },
-      }
-    )
-
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
-
-    if (!error) {
-      // Force cookie write in some environments
-      await supabase.auth.getUser()
-      return redirectResponse
-    }
+  if (!code) {
+    return NextResponse.redirect(`${base}/login?error=auth_error`)
   }
 
-  return NextResponse.redirect(
-    `${base}/login?error=${encodeURIComponent("auth_error")}`
+  const response = NextResponse.redirect(`${base}${next}`)
+
+  const supabase = createServerClient<Database>(
+    env.NEXT_PUBLIC_SUPABASE_URL,
+    env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            try {
+              request.cookies.set(name, value)
+            } catch {}
+            response.cookies.set(name, value, options)
+          })
+        },
+      },
+    }
   )
+
+  const { error } = await supabase.auth.exchangeCodeForSession(code)
+
+  if (error) {
+    console.error("auth/callback exchangeCodeForSession error:", error.message)
+    return NextResponse.redirect(`${base}/login?error=auth_error`)
+  }
+
+  await supabase.auth.getUser()
+
+  return response
 }

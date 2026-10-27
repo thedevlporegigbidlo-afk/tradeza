@@ -2,8 +2,8 @@ import Link from "next/link"
 import { connection } from "next/server"
 import { Suspense } from "react"
 import { createClient } from "@/lib/supabase/server"
-import { SignOutButton } from "@/components/sign-out-button"
 import { TradezaLogo } from "@/components/tradeza-logo"
+import { UserMenu } from "@/components/user-menu"
 
 export const LOGO_URL = "/tradeza-mark.svg"
 
@@ -19,17 +19,21 @@ async function HeaderAuth() {
   } = await supabase.auth.getUser()
 
   if (user) {
-    return (
-      <div className="flex items-center gap-4">
-        <Link
-          className="text-on-surface-variant hover:text-primary font-label-lg text-label-lg px-3 py-2 transition-colors active:scale-[0.99]"
-          href="/my-business"
-        >
-          My Business
-        </Link>
-        <SignOutButton />
-      </div>
-    )
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("full_name, avatar_url, email")
+      .eq("id", user.id)
+      .maybeSingle()
+
+    const displayName =
+      profile?.full_name ||
+      user.user_metadata?.full_name ||
+      user.email?.split("@")[0] ||
+      "User"
+    const email = profile?.email || user.email || ""
+    const avatarUrl = profile?.avatar_url || user.user_metadata?.avatar_url || null
+
+    return <UserMenu name={displayName} email={email} avatarUrl={avatarUrl} />
   }
 
   return (
@@ -42,7 +46,7 @@ async function HeaderAuth() {
       </Link>
       <Link
         className="bg-primary-container hover:bg-[#1C573F] active:scale-[0.99] text-on-primary font-label-lg text-label-lg px-5 py-2.5 rounded-xl transition-all duration-150 shadow-sm flex items-center gap-1.5"
-        href="/list-business"
+        href="/login?next=%2Flist-business"
       >
         <span>List Your Business</span>
       </Link>

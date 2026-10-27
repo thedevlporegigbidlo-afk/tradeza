@@ -45,11 +45,24 @@ export default async function MyBusinessPage({
   } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
-  const [businesses, opportunities, params] = await Promise.all([
+  const [{ data: profile }, businesses, opportunities, params] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("full_name, avatar_url, email")
+      .eq("id", user.id)
+      .maybeSingle(),
     getUserBusinesses(user.id),
     getUserOpportunities(user.id),
     searchParams,
   ])
+
+  const displayName =
+    profile?.full_name ||
+    user.user_metadata?.full_name ||
+    user.email?.split("@")[0] ||
+    "User"
+  const email = profile?.email || user.email || ""
+  const avatarUrl = profile?.avatar_url || user.user_metadata?.avatar_url || null
 
   const flash = params.created
     ? "Saved. It is currently a draft — publish it when you are ready."
@@ -57,32 +70,63 @@ export default async function MyBusinessPage({
       ? "Your changes have been saved."
       : null
 
+  function getInitials(name: string) {
+    const parts = name.trim().split(/\s+/)
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
+    return (parts[0][0] + parts[1][0]).toUpperCase()
+  }
+
   return (
     <section className="py-12 md:py-16">
       <div className="max-w-5xl mx-auto px-6">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
-          <div>
-            <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-[#202923] font-bold tracking-tight">
-              My business
-            </h1>
-            <p className="font-body-md text-body-md text-[#66716A] mt-1">
-              Manage your listings and opportunities.
-            </p>
+        <div className="bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl p-6 md:p-8 custom-card-shadow mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="flex items-center gap-4">
+            {avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={avatarUrl}
+                alt={displayName}
+                className="w-16 h-16 rounded-full object-cover border border-[#E4E9E3]"
+              />
+            ) : (
+              <div className="w-16 h-16 rounded-full bg-[#EDF3ED] text-primary flex items-center justify-center font-headline-sm text-headline-sm font-semibold">
+                {getInitials(displayName)}
+              </div>
+            )}
+            <div>
+              <h1 className="font-headline-md text-headline-md text-[#202923] font-bold tracking-tight">
+                {displayName}
+              </h1>
+              <p className="font-body-md text-body-md text-[#66716A] mt-0.5">
+                {email}
+              </p>
+            </div>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link
               href="/list-business"
-              className="bg-primary-container hover:bg-[#1C573F] text-on-primary font-label-lg text-label-lg px-5 py-2.5 rounded-xl transition-all shadow-sm"
+              className="bg-primary-container hover:bg-[#1C573F] text-on-primary font-label-lg text-label-lg px-5 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2"
             >
-              New business
+              <span className="material-symbols-rounded text-[18px]">add_business</span>
+              <span>Add Business</span>
             </Link>
             <Link
               href="/post-opportunity"
-              className="bg-surface-container-lowest hover:bg-[#FAFAF7] text-[#202923] border border-[#E4E9E3] hover:border-[#CCD5CB] font-label-lg text-label-lg px-5 py-2.5 rounded-xl transition-all"
+              className="bg-surface-container-lowest hover:bg-[#FAFAF7] text-[#202923] border border-[#E4E9E3] hover:border-[#CCD5CB] font-label-lg text-label-lg px-5 py-2.5 rounded-xl transition-all flex items-center gap-2"
             >
-              New opportunity
+              <span className="material-symbols-rounded text-[18px]">campaign</span>
+              <span>Post Opportunity</span>
             </Link>
           </div>
+        </div>
+
+        <div className="mb-10">
+          <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-[#202923] font-bold tracking-tight">
+            My Dashboard
+          </h2>
+          <p className="font-body-md text-body-md text-[#66716A] mt-1">
+            Manage your business listings and opportunities.
+          </p>
         </div>
 
         {flash && (
