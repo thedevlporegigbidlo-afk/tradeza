@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { connection } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { BusinessForm } from "@/components/business-form"
+import { PayToList } from "@/components/pay-to-list"
 import { getCategories } from "@/lib/queries"
 
 export const metadata: Metadata = {
@@ -21,6 +22,15 @@ export default async function ListBusinessPage() {
 
   if (!user) redirect("/login?next=%2Flist-business")
 
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("has_paid_listing, paid_at")
+    .eq("id", user.id)
+    .maybeSingle()
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const hasPaid = (profile as any)?.has_paid_listing === true
+
   const categories = await getCategories()
 
   return (
@@ -31,26 +41,16 @@ export default async function ListBusinessPage() {
             List your business
           </h1>
           <p className="font-body-md text-body-md text-[#66716A] mt-1">
-            Create a profile so other businesses can find you. It starts as a
-            draft — review and publish when you are ready.
+            Create a profile so other businesses can find you.
           </p>
         </div>
-        <div className="bg-[#EDF3ED] border border-[#CCD5CB] rounded-2xl p-5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <p className="font-label-lg text-label-lg text-[#202923] font-semibold">
-              Business Listing Fee
-            </p>
-            <p className="font-body-sm text-body-sm text-[#66716A] mt-0.5">
-              Pay ₹49 once to publish your business listing on Tradeza
-            </p>
+        {hasPaid ? (
+          <div className="bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl p-8 custom-card-shadow">
+            <BusinessForm categories={categories} />
           </div>
-          <span className="font-headline-sm text-headline-sm text-primary font-bold">
-            ₹49
-          </span>
-        </div>
-        <div className="bg-surface-container-lowest border border-[#E4E9E3] rounded-2xl p-8 custom-card-shadow">
-          <BusinessForm categories={categories} />
-        </div>
+        ) : (
+          <PayToList />
+        )}
       </div>
     </section>
   )
