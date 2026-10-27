@@ -17,8 +17,9 @@ export async function POST() {
     const apiKey = env.DODO_API_KEY
 
     if (!productId || !apiKey) {
+      console.error("Missing Dodo env:", { hasProduct: !!productId, hasKey: !!apiKey })
       return NextResponse.json(
-        { error: "Payment not configured" },
+        { error: "Payment not configured. Please contact support." },
         { status: 500 }
       )
     }
