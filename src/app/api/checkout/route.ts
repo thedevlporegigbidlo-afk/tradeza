@@ -26,7 +26,7 @@ export async function POST() {
 
     const baseUrl = env.NEXT_PUBLIC_SITE_URL || "https://tradeza-jet.vercel.app"
 
-    const res = await fetch("https://api.dodopayments.com/checkouts", {
+    const res = await fetch("https://test.dodopayments.com/checkouts", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
