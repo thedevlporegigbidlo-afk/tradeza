@@ -16,6 +16,12 @@ export function PayToList() {
         credentials: "include",
       })
       const data = await res.json()
+
+      if (res.status === 401) {
+        window.location.href = "/login?next=%2Flist-business"
+        return
+      }
+
       if (!res.ok || !data.url) {
         setError(data.error || `Failed to start checkout (${res.status})`)
         setLoading(false)
